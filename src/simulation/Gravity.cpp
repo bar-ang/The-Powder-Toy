@@ -200,6 +200,7 @@ void Gravity::update_grav_async()
 #endif
 
 	std::unique_lock<std::mutex> l(gravmutex);
+	//run gravity here
 	while (!thread_done)
 	{
 		if (!done)
@@ -227,6 +228,7 @@ void Gravity::start_grav_async()
 
 	gravthread_done = 0;
 	grav_ready = 0;
+	// You need to enable newtonian gravity in order to reach here.
 	gravthread = std::thread([this]() { update_grav_async(); }); //Start asynchronous gravity simulation
 	enabled = true;
 

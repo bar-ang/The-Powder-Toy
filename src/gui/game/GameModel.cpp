@@ -57,6 +57,7 @@ GameModel::GameModel():
 	ambientAirTemp(R_TEMP + 273.15f),
 	decoSpace(0)
 {
+	// This is where the simulation starts. I don't know why it is called from other places.
 	sim = new Simulation();
 	ren = new Renderer(ui::Engine::Ref().g, sim);
 

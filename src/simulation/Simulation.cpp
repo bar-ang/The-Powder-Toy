@@ -745,6 +745,8 @@ int Simulation::flood_prop(int x, int y, size_t propoffset, PropertyValue propva
 	return did_something;
 }
 
+// TODO: seems like I can learn alot from this function.
+// Should save it for references
 SimulationSample Simulation::GetSample(int x, int y)
 {
 	SimulationSample sample;
@@ -757,7 +759,7 @@ SimulationSample Simulation::GetSample(int x, int y)
 			sample.particle = parts[ID(photons[y][x])];
 			sample.ParticleID = ID(photons[y][x]);
 		}
-		else if (pmap[y][x])
+		else if (pmap[y][x])// particle
 		{
 			sample.particle = parts[ID(pmap[y][x])];
 			sample.ParticleID = ID(pmap[y][x]);
@@ -1671,6 +1673,7 @@ int Simulation::FloodWalls(int x, int y, int wall, int bm)
 }
 
 #ifndef RENDERER
+// The actual setting of particles
 int Simulation::CreateParts(int positionX, int positionY, int c, Brush * cBrush, int flags)
 {
 	if (flags == -1)
@@ -1818,6 +1821,7 @@ int Simulation::CreatePartFlags(int x, int y, int c, int flags)
 			(!photons[y][x] && pmap[y][x] && TYP(pmap[y][x]) == replaceModeSelected) ||
 			(photons[y][x] && TYP(photons[y][x]) == replaceModeSelected))
 		{
+			// c = create (or delete)
 			if (c)
 				create_part(photons[y][x] ? ID(photons[y][x]) : ID(pmap[y][x]), x, y, TYP(c), ID(c));
 			else
@@ -3180,6 +3184,7 @@ bool Simulation::part_change_type(int i, int x, int y, int t)
 
 //the function for creating a particle, use p=-1 for creating a new particle, -2 is from a brush, or a particle number to replace a particle.
 //tv = Type (PMAPBITS bits) + Var (32-PMAPBITS bits), var is usually 0
+// TODO: Now Really create
 int Simulation::create_part(int p, int x, int y, int t, int v)
 {
 	int i, oldType = PT_NONE;
@@ -3455,6 +3460,7 @@ void Simulation::delete_part(int x, int y)//calls kill_part with the particle lo
 	kill_part(ID(i));
 }
 
+// Now, this is the meat :)
 void Simulation::UpdateParticles(int start, int end)
 {
 	int i, j, x, y, t, nx, ny, r, surround_space, s, rt, nt;
@@ -3470,7 +3476,7 @@ void Simulation::UpdateParticles(int start, int end)
 	float pGravX, pGravY, pGravD;
 	bool transitionOccurred;
 
-	//the main particle loop function, goes over all particles.
+	//the main particle loop function, goes over all particles !!!
 	for (i = start; i <= end && i <= parts_lastActiveIndex; i++)
 		if (parts[i].type)
 		{
@@ -3575,7 +3581,7 @@ void Simulation::UpdateParticles(int start, int end)
 				parts[i].vx *= elements[t].Loss;
 				parts[i].vy *= elements[t].Loss;
 			}
-			//particle gets velocity from the vx and vy maps
+			//particle gets velocity from the vx and vy maps !!!
 			parts[i].vx += elements[t].Advection*vx[y/CELL][x/CELL] + pGravX;
 			parts[i].vy += elements[t].Advection*vy[y/CELL][x/CELL] + pGravY;
 
@@ -4709,6 +4715,7 @@ void Simulation::RecalcFreeParticles(bool do_life_dec)
 
 	memset(pmap, 0, sizeof(pmap));
 	memset(pmap_count, 0, sizeof(pmap_count));
+	// TODO: why the photons got their own map?
 	memset(photons, 0, sizeof(photons));
 
 	NUM_PARTS = 0;
