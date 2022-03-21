@@ -35,6 +35,8 @@ class Brush;
 class GameModel;
 class GameView: public ui::Window
 {
+//This is the GUI. Here we'll find all the EVENT LISTENERS.
+//'OnTick' is called repeatedly.
 private:
 	bool isMouseDown;
 	bool skipDraw;

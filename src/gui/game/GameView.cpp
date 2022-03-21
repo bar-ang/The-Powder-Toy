@@ -1664,6 +1664,7 @@ void GameView::OnTick(float dt)
 		if(toolTipPresence<0)
 			toolTipPresence = 0;
 	}
+	// updating simulation
 	c->Update();
 }
 
