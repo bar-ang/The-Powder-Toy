@@ -1812,6 +1812,8 @@ int Simulation::CreatePartFlags(int x, int y, int c, int flags)
 		return 0;
 	}
 
+	std::cout << x << " " << y << " " << c << " " << flags << "\n";
+
 	if (flags & REPLACE_MODE)
 	{
 		// if replace whatever and there's something to replace
