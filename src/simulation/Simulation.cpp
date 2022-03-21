@@ -745,6 +745,8 @@ int Simulation::flood_prop(int x, int y, size_t propoffset, PropertyValue propva
 	return did_something;
 }
 
+// TODO: seems like I can learn alot from this function.
+// Should save it for references
 SimulationSample Simulation::GetSample(int x, int y)
 {
 	SimulationSample sample;
@@ -757,7 +759,7 @@ SimulationSample Simulation::GetSample(int x, int y)
 			sample.particle = parts[ID(photons[y][x])];
 			sample.ParticleID = ID(photons[y][x]);
 		}
-		else if (pmap[y][x])
+		else if (pmap[y][x])// particle
 		{
 			sample.particle = parts[ID(pmap[y][x])];
 			sample.ParticleID = ID(pmap[y][x]);
@@ -1671,6 +1673,7 @@ int Simulation::FloodWalls(int x, int y, int wall, int bm)
 }
 
 #ifndef RENDERER
+// The actual setting of particles
 int Simulation::CreateParts(int positionX, int positionY, int c, Brush * cBrush, int flags)
 {
 	if (flags == -1)
@@ -1818,6 +1821,7 @@ int Simulation::CreatePartFlags(int x, int y, int c, int flags)
 			(!photons[y][x] && pmap[y][x] && TYP(pmap[y][x]) == replaceModeSelected) ||
 			(photons[y][x] && TYP(photons[y][x]) == replaceModeSelected))
 		{
+			// c = create (or delete)
 			if (c)
 				create_part(photons[y][x] ? ID(photons[y][x]) : ID(pmap[y][x]), x, y, TYP(c), ID(c));
 			else
@@ -3180,6 +3184,7 @@ bool Simulation::part_change_type(int i, int x, int y, int t)
 
 //the function for creating a particle, use p=-1 for creating a new particle, -2 is from a brush, or a particle number to replace a particle.
 //tv = Type (PMAPBITS bits) + Var (32-PMAPBITS bits), var is usually 0
+// TODO: Now Really create
 int Simulation::create_part(int p, int x, int y, int t, int v)
 {
 	int i, oldType = PT_NONE;
@@ -4709,6 +4714,7 @@ void Simulation::RecalcFreeParticles(bool do_life_dec)
 
 	memset(pmap, 0, sizeof(pmap));
 	memset(pmap_count, 0, sizeof(pmap_count));
+	// TODO: why the photons got their own map?
 	memset(photons, 0, sizeof(photons));
 
 	NUM_PARTS = 0;
