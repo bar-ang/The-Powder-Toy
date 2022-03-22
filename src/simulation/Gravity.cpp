@@ -257,7 +257,7 @@ void Gravity::stop_grav_async()
 	std::fill(&gravmap[0], &gravmap[size], 0.0f);
 }
 
-#ifdef GRAVFFT
+// execute repeatedly forever
 void Gravity::update_grav()
 {
 	int xblock2 = XRES/CELL*2, yblock2 = YRES/CELL*2;
@@ -317,67 +317,6 @@ void Gravity::update_grav()
 	// Copy th_ogravmap into th_gravmap (doesn't matter what th_ogravmap is afterwards)
 	std::swap(th_gravmap, th_ogravmap);
 }
-
-#else
-// gravity without fast Fourier transforms
-
-void Gravity::update_grav(void)
-{
-	int x, y, i, j;
-	float val, distance;
-	th_gravchanged = 0;
-#ifndef GRAV_DIFF
-	//Find any changed cells
-	for (i=0; i<YRES/CELL; i++)
-	{
-		if(changed)
-			break;
-		for (j=0; j<XRES/CELL; j++)
-		{
-			if(th_ogravmap[i*(XRES/CELL)+j]!=th_gravmap[i*(XRES/CELL)+j]){
-				changed = 1;
-				break;
-			}
-		}
-	}
-	if(!changed)
-		goto fin;
-	memset(th_gravy, 0, (XRES/CELL)*(YRES/CELL)*sizeof(float));
-	memset(th_gravx, 0, (XRES/CELL)*(YRES/CELL)*sizeof(float));
-#endif
-	th_gravchanged = 1;
-	membwand(th_gravmap, gravmask, (XRES/CELL)*(YRES/CELL)*sizeof(float), (XRES/CELL)*(YRES/CELL)*sizeof(unsigned));
-	for (i = 0; i < YRES / CELL; i++) {
-		for (j = 0; j < XRES / CELL; j++) {
-#ifdef GRAV_DIFF
-			if (th_ogravmap[i*(XRES/CELL)+j] != th_gravmap[i*(XRES/CELL)+j])
-			{
-#else
-			if (th_gravmap[i*(XRES/CELL)+j] > 0.0001f || th_gravmap[i*(XRES/CELL)+j]<-0.0001f) //Only calculate with populated or changed cells.
-			{
-#endif
-				for (y = 0; y < YRES / CELL; y++) {
-					for (x = 0; x < XRES / CELL; x++) {
-						if (x == j && y == i)//Ensure it doesn't calculate with itself
-							continue;
-						distance = sqrt(pow(j - x, 2.0f) + pow(i - y, 2.0f));
-#ifdef GRAV_DIFF
-						val = th_gravmap[i*(XRES/CELL)+j] - th_ogravmap[i*(XRES/CELL)+j];
-#else
-						val = th_gravmap[i*(XRES/CELL)+j];
-#endif
-						th_gravx[y*(XRES/CELL)+x] += M_GRAV * val * (j - x) / pow(distance, 3.0f);
-						th_gravy[y*(XRES/CELL)+x] += M_GRAV * val * (i - y) / pow(distance, 3.0f);
-						th_gravp[y*(XRES/CELL)+x] += M_GRAV * val / pow(distance, 2.0f);
-					}
-				}
-			}
-		}
-	}
-	memcpy(th_ogravmap, th_gravmap, (XRES/CELL)*(YRES/CELL)*sizeof(float));
-}
-#endif
-
 
 
 bool Gravity::grav_mask_r(int x, int y, char checkmap[YRES/CELL][XRES/CELL], char shape[YRES/CELL][XRES/CELL])
