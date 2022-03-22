@@ -229,6 +229,7 @@ void Gravity::start_grav_async()
 
 	gravthread_done = 0;
 	grav_ready = 0;
+	// You need to enable newtonian gravity in order to reach here.
 	std::cout << "BEFORE gravity_update_async" << std::endl;
 	gravthread = std::thread([this]() { update_grav_async(); }); //Start asynchronous gravity simulation
 	enabled = true;
