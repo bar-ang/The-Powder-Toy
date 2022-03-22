@@ -137,7 +137,6 @@ void Gravity::grav_fft_cleanup()
 
 void Gravity::gravity_update_async()
 {
-	std::cout << "IN gravity_update_async" << std::endl;
 	int result;
 	if (!enabled)
 		return;
