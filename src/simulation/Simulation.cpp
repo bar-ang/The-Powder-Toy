@@ -3478,6 +3478,7 @@ void Simulation::UpdateParticles(int start, int end)
 
 	//the main particle loop function, goes over all particles !!!
 	for (i = start; i <= end && i <= parts_lastActiveIndex; i++)
+	{
 		if (parts[i].type)
 		{
 			t = parts[i].type;
@@ -4677,6 +4678,7 @@ killed:
 					}
 				}
 			}
+		}
 movedone:
 			continue;
 		}
