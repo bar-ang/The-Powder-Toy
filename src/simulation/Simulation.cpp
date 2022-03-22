@@ -3582,7 +3582,7 @@ void Simulation::UpdateParticles(int start, int end)
 				parts[i].vx *= elements[t].Loss;
 				parts[i].vy *= elements[t].Loss;
 			}
-			//particle gets velocity from the vx and vy maps
+			//particle gets velocity from the vx and vy maps !!!
 			parts[i].vx += elements[t].Advection*vx[y/CELL][x/CELL] + pGravX;
 			parts[i].vy += elements[t].Advection*vy[y/CELL][x/CELL] + pGravY;
 
