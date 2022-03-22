@@ -201,6 +201,7 @@ void Gravity::update_grav_async()
 #endif
 
 	std::unique_lock<std::mutex> l(gravmutex);
+	//run gravity here
 	while (!thread_done)
 	{
 		if (!done)

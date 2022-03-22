@@ -3460,6 +3460,7 @@ void Simulation::delete_part(int x, int y)//calls kill_part with the particle lo
 	kill_part(ID(i));
 }
 
+// Now, this is the meat :)
 void Simulation::UpdateParticles(int start, int end)
 {
 	int i, j, x, y, t, nx, ny, r, surround_space, s, rt, nt;
@@ -3475,7 +3476,7 @@ void Simulation::UpdateParticles(int start, int end)
 	float pGravX, pGravY, pGravD;
 	bool transitionOccurred;
 
-	//the main particle loop function, goes over all particles.
+	//the main particle loop function, goes over all particles !!!
 	for (i = start; i <= end && i <= parts_lastActiveIndex; i++)
 		if (parts[i].type)
 		{
