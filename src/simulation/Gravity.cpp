@@ -137,9 +137,11 @@ void Gravity::grav_fft_cleanup()
 
 void Gravity::gravity_update_async()
 {
+	std::cout << "IN gravity_update_async" << std::endl;
 	int result;
 	if (!enabled)
 		return;
+
 
 	bool signal_grav = false;
 
@@ -227,6 +229,7 @@ void Gravity::start_grav_async()
 
 	gravthread_done = 0;
 	grav_ready = 0;
+	std::cout << "BEFORE gravity_update_async" << std::endl;
 	gravthread = std::thread([this]() { update_grav_async(); }); //Start asynchronous gravity simulation
 	enabled = true;
 

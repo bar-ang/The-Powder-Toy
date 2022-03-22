@@ -92,6 +92,7 @@ int main(int argc, char *argv[])
 			throw e;
 	}
 
+	std::cout << "STSRTING SIMULATION" << std::endl;
 	Simulation * sim = new Simulation();
 	Renderer * ren = new Renderer(new Graphics(), sim);
 
