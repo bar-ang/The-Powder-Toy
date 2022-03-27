@@ -1,3 +1,4 @@
+#include <iostream>
 #include "GameView.h"
 
 #include "Brush.h"
