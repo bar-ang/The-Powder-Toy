@@ -1198,24 +1198,6 @@ void GameView::ToolTip(ui::Point senderPosition, String toolTip)
 	}
 }
 
-void GameView::OnMouseWheel(int x, int y, int d)
-{
-	if (!d)
-		return;
-	if (selectMode != SelectNone)
-	{
-		return;
-	}
-	if (zoomEnabled && !zoomCursorFixed)
-	{
-		c->AdjustZoomSize(d);
-	}
-	else
-	{
-		c->AdjustBrushSize(d, false, shiftBehaviour, ctrlBehaviour);
-	}
-}
-
 void GameView::BeginStampSelection()
 {
 	selectMode = SelectStamp;
@@ -1562,8 +1544,9 @@ void GameView::OnFileDrop(ByteString filename)
 	introText = 0;
 }
 
-void GameView::OnTick(float dt)
+void GameView::OnMouseWheel(int x, int y, int d)
 {
+	float dt = 3;
 	if (selectMode == PlaceSave && !placeSaveThumb)
 		selectMode = SelectNone;
 	if (zoomEnabled && !zoomCursorFixed)

@@ -202,7 +202,7 @@ public:
 	void OnMouseWheel(int x, int y, int d) override;
 	void OnKeyPress(int key, int scan, bool repeat, bool shift, bool ctrl, bool alt) override;
 	void OnKeyRelease(int key, int scan, bool repeat, bool shift, bool ctrl, bool alt) override;
-	void OnTick(float dt) override;
+//	void OnTick(float dt) override;
 	void OnDraw() override;
 	void OnBlur() override;
 	void OnFileDrop(ByteString filename) override;
