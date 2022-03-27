@@ -1278,6 +1278,11 @@ void GameView::OnKeyPress(int key, int scan, bool repeat, bool shift, bool ctrl,
 	{
 		c->Drown();
 	}
+	if (key == SDLK_v)
+	{
+		std::cout << "clicked v" << std::endl;
+		c->FillClosed();
+	}
 
 	if (repeat)
 		return;

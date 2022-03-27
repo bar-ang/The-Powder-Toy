@@ -880,6 +880,13 @@ void GameController::LoadRenderPreset(int presetNum)
 	renderer->SetColourMode(preset.ColourMode);
 }
 
+void GameController::FillClosed() {
+	ui::Point pos = gameView->GetMousePosition();
+	int mat = TYP(gameModel->GetActiveTool(1)->GetToolID());
+	if(mat)
+		gameModel->GetSimulation()->FillClosed(mat, pos.X, pos.Y);
+}
+
 void GameController::Drown() {
 	gameModel->GetSimulation()->Drown(PT_SMKE, 0, XRES-CELL, 0, YRES-CELL);
 }

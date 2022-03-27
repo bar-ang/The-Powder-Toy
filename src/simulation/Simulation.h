@@ -203,6 +203,7 @@ public:
 	int FloodParts(int x, int y, int c, int cm, int flags = -1);
 
 
+	void FillClosed(int mat, int x, int y);
 	void GetGravityField(int x, int y, float particleGrav, float newtonGrav, float & pGravX, float & pGravY);
 
 	int GetParticleType(ByteString type);
@@ -247,6 +248,7 @@ public:
 
 private:
 	CoordStack& getCoordStackSingleton();
+	int isAreaClosed(int vmap[YRES][XRES], int start_x, int start_y);
 };
 
 #endif /* SIMULATION_H */

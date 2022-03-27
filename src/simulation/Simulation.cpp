@@ -1,6 +1,7 @@
 #include "Simulation.h"
 
 #include <iostream>
+#include <queue>
 #include <cmath>
 #include <set>
 #ifdef _MSC_VER
@@ -5236,6 +5237,65 @@ void Simulation::BeforeSim()
 
 		// particle update happens right after this function (called separately)
 	}
+}
+
+
+// Implementing BFS algorithm on vmap
+int Simulation::isAreaClosed(int vmap[YRES][XRES], int start_x, int start_y)
+{
+	int i;
+
+	std::queue<std::pair<int, int>> activeCells;
+
+	activeCells.push(std::make_pair(start_x,start_y));
+	for (i = 0; ; i++)
+	{
+		if (activeCells.empty())
+			break;
+
+		auto cell = activeCells.front();
+		int x = std::get<0>(cell);
+		int y = std::get<1>(cell);
+		activeCells.pop();
+
+		if (x < 0 || y < 0 || x >= XRES || y >= YRES) //TODO: maybe there's a macro for it. need to check.
+			return 0;
+
+		if (vmap[y][x])
+			continue;
+
+		if (pmap[y][x])
+			continue;
+		
+		if (bmap[y/CELL][x/CELL])
+			continue;
+
+		vmap[y][x] = 1;
+		activeCells.push(std::make_pair(x+1,y));
+		activeCells.push(std::make_pair(x-1,y));
+		activeCells.push(std::make_pair(x,y+1));
+		activeCells.push(std::make_pair(x,y-1));
+	}
+
+	return 1;
+}
+
+void Simulation::FillClosed(int mat, int x, int y)
+{
+	//visiting map, where the recurstion visited already
+	int vmap[YRES][XRES] = {0};
+	int i, j;
+
+	if (isAreaClosed(vmap, x, y))
+	{
+		for (i = 0; i < YRES; i++)
+			for (j = 0; j < XRES; j++)
+				if (vmap[i][j])
+					if (create_part(-1, j, i, mat, 0) < 0)
+						std::cout << "Failed to create part at position (" << j << "," << i << ")" << std::endl;
+	}
+	else
+		std::cout << "Area is open" << std::endl;
 }
 
 void Simulation::Drown(int mat, int startX, int endX, int startY, int endY)

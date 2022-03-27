@@ -144,6 +144,7 @@ public:
 	void OpenElementSearch();
 	void OpenColourPicker();
 	void PlaceSave(ui::Point position);
+	void FillClosed();
 	void Drown();
 	void ClearSim();
 	void ReloadSim();
