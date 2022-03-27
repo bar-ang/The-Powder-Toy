@@ -908,6 +908,7 @@ int main(int argc, char * argv[])
 	try {
 #endif
 
+		// Creating a game.
 		gameController = new GameController();
 		engine->ShowWindow(gameController->GetView());
 

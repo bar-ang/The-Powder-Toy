@@ -879,6 +879,8 @@ void GameController::LoadRenderPreset(int presetNum)
 	renderer->SetColourMode(preset.ColourMode);
 }
 
+// Here we update the particles and do other stuff
+// This function is called repeadetly
 void GameController::Update()
 {
 	ui::Point pos = gameView->GetMousePosition();
