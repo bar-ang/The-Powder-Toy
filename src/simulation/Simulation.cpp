@@ -5238,6 +5238,22 @@ void Simulation::BeforeSim()
 	}
 }
 
+void Simulation::Drown(int mat, int startX, int endX, int startY, int endY)
+{
+	int x, y;
+	std::cout << "DROWN1" << std::endl;
+	for (x = startX; x <= endX; x++)
+		for (y = startY; y <= endY; y++)
+		{
+			if (!pmap[y][x]){
+				int res = create_part(-1, x, y, mat, 0);
+				if (res < 0) {
+					std::cout << "Failed to create part at position (" << x << "," << y << ")" << std::endl;
+				}
+			}
+		}
+}
+
 void Simulation::AfterSim()
 {
 	if (emp_trigger_count)

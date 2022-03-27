@@ -880,6 +880,10 @@ void GameController::LoadRenderPreset(int presetNum)
 	renderer->SetColourMode(preset.ColourMode);
 }
 
+void GameController::Drown() {
+	gameModel->GetSimulation()->Drown(PT_SMKE, 0, XRES-CELL, 0, YRES-CELL);
+}
+
 // Here we update the particles and do other stuff
 // This function is called repeadetly
 void GameController::Update()

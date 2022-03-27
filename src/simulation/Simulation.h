@@ -166,6 +166,7 @@ public:
 	void CheckStacking();
 	void BeforeSim();
 	void AfterSim();
+	void Drown(int mat, int startX, int endX, int startY, int endY);
 	void rotate_area(int area_x, int area_y, int area_w, int area_h, int invert);
 	void clear_area(int area_x, int area_y, int area_w, int area_h);
 

@@ -1274,6 +1274,11 @@ void GameView::OnKeyPress(int key, int scan, bool repeat, bool shift, bool ctrl,
 		}
 	}
 
+	if (key == SDLK_a)
+	{
+		c->Drown();
+	}
+
 	if (repeat)
 		return;
 	bool didKeyShortcut = true;
