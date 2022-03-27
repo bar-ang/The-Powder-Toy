@@ -1,38 +1,39 @@
+#include <iostream>
 #include "simulation/ElementCommon.h"
 
 static int update(UPDATE_FUNC_ARGS);
 
 void Element::Element_RBAR()
 {
-	Identifier = "DEFAULT_PT_ARBAR";
+	Identifier = "DEFAULT_PT_RBAR";
 	Name = "RBAR";
-	Colour = PIXPACK(0xA0A0FF);
+	Colour = PIXPACK(0xCA4D6B);
 	MenuVisible = 1;
-	MenuSection = SC_GAS;
+	MenuSection = SC_SOLIDS;
 	Enabled = 1;
 
-	Advection = 1.0f;
-	AirDrag = 0.01f * CFDS;
-	AirLoss = 0.99f;
-	Loss = 0.30f;
-	Collision = -0.1f;
-	Gravity = -0.1f;
-	Diffusion = 0.75f;
-	HotAir = 0.0003f	* CFDS;
+	Advection = 0.0f;
+	AirDrag = 0.00f * CFDS;
+	AirLoss = 0.90f;
+	Loss = 0.00f;
+	Collision = 0.0f;
+	Gravity = 0.0f;
+	Diffusion = 0.0f;
+	HotAir = 0.000f	* CFDS;
 	Falldown = 0;
 
 	Flammable = 0;
 	Explosive = 0;
 	Meltable = 0;
-	Hardness = 4;
+	Hardness = 15;
 
-	Weight = 1;
+	Weight = 100;
 
-	DefaultProperties.temp = R_TEMP + 100.0f + 273.15f;
+	DefaultProperties.temp = R_TEMP + 273.15f;
 	HeatConduct = 48;
-	Description = "Steam. Produced from hot water.";
+	Description = "rbar is a simple element";
 
-	Properties = TYPE_GAS;
+	Properties = TYPE_SOLID;
 
 	LowPressure = IPL;
 	LowPressureTransition = NT;
@@ -46,6 +47,8 @@ void Element::Element_RBAR()
 	Update = &update;
 }
 
+//UPDATE_FUNC_ARGS Simulation* sim, int i, int x, int y, int surround_space, int nt, Particle *parts, int pmap[YRES][XRES]
+
 static int update(UPDATE_FUNC_ARGS)
 {
 	int r, rx, ry;
@@ -56,14 +59,14 @@ static int update(UPDATE_FUNC_ARGS)
 				r = pmap[y+ry][x+rx];
 				if (!r)
 					continue;
-				if ((TYP(r)==PT_RBDM||TYP(r)==PT_LRBD) && !sim->legacy_enable && parts[i].temp>(273.15f+12.0f) && RNG::Ref().chance(1, 100))
-				{
-					sim->part_change_type(i,x,y,PT_FIRE);
-					parts[i].life = 4;
-					parts[i].ctype = PT_WATR;
+
+				if (TYP(r) == PT_RBAR)
+					continue;
+
+				if (RNG::Ref().chance(1, 5)) {
+					sim->part_change_type(i,x,y, TYP(r));
 				}
 			}
-	if(parts[i].temp>1273&&parts[i].ctype==PT_FIRE)
-		parts[i].temp-=parts[i].temp/1000;
+
 	return 0;
 }
