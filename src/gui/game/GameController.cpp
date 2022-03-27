@@ -1646,19 +1646,7 @@ void GameController::RemoveNotification(Notification * notification)
 
 void GameController::RunUpdater()
 {
-#ifndef MACOSX
-	Exit();
-	new UpdateActivity();
-#else
-
-#ifdef UPDATESERVER
-	ByteString file = ByteString::Build(SCHEME, UPDATESERVER, Client::Ref().GetUpdateInfo().File);
-#else
-	ByteString file = ByteString::Build(SCHEME, SERVER, Client::Ref().GetUpdateInfo().File);
-#endif
-
-	Platform::OpenURI(file);
-#endif // MACOSX
+	// irrelevant (?)
 }
 
 bool GameController::GetMouseClickRequired()
