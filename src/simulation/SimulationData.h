@@ -5,6 +5,8 @@
 #include <vector>
 #include <array>
 
+// TODO: this make it hard to add new menus in the middle of the array
+// a good place to fix.
 #define SC_WALL 0
 #define SC_ELEC 1
 #define SC_POWERED 2
