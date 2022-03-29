@@ -22,10 +22,11 @@
 #define SC_LIFE 12
 #define SC_TOOL 13
 #define SC_FAVORITES 14
-#define SC_DECO 15
-#define SC_CRACKER 16
-#define SC_CRACKER2 17
-#define SC_TOTAL 16
+#define SC_HUMAN 15
+#define SC_DECO 16
+#define SC_CRACKER 17
+#define SC_CRACKER2 18
+#define SC_TOTAL 18
 
 #define O_WL_WALLELEC	122
 #define O_WL_EWALL		123
