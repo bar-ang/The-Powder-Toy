@@ -192,6 +192,7 @@ simulation_elem_ids = [
 	[ 'ROCK',   190 ],
 	[ 'LITH',   191 ],
 	[ 'BLOD',   192 ],
+	[ 'BONE',   193 ],
 ]
 
 simulation_elem_src = []
