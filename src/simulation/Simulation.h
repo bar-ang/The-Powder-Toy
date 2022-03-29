@@ -10,6 +10,7 @@
 
 #include "Particle.h"
 #include "Stickman.h"
+#include "Eye.h"
 #include "WallType.h"
 #include "Sign.h"
 #include "ElementDefs.h"
@@ -72,6 +73,10 @@ public:
 	playerst player2;
 	playerst fighters[MAX_FIGHTERS]; //Defined in Stickman.h
 	unsigned char fighcount; //Contains the number of fighters
+	//Eyes
+	eyest eyes[MAX_EYES];
+	unsigned char eyecount;
+
 	bool gravWallChanged;
 	//Portals and Wifi
 	Particle portalp[CHANNELS][8][80];

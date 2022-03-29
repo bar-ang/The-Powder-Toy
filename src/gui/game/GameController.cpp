@@ -12,6 +12,7 @@
 #include "QuickOptions.h"
 #include "RenderPreset.h"
 #include "Tool.h"
+#include "simulation/Eye.h"
 
 #ifdef LUACONSOLE
 # include "lua/LuaScriptInterface.h"
@@ -517,7 +518,17 @@ void GameController::CutRegion(ui::Point point1, ui::Point point2)
 bool GameController::MouseMove(int x, int y, int dx, int dy)
 {
 	MouseMoveEvent ev(x, y, dx, dy);
-	return commandInterface->HandleEvent(LuaEvents::mousemove, &ev);
+	bool ret = commandInterface->HandleEvent(LuaEvents::mousemove, &ev);
+
+	// Activate the eyes
+	int i;
+	auto sim = gameModel->GetSimulation();
+	for (i = 0; i < sim->eyecount; i++)
+	{
+		pupil_look_to_point(&(sim->eyes[i]), x, y);
+	}
+
+	return ret;
 }
 
 bool GameController::MouseDown(int x, int y, unsigned button)

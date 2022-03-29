@@ -193,6 +193,7 @@ simulation_elem_ids = [
 	[ 'LITH',   191 ],
 	[ 'BLOD',   192 ],
 	[ 'BONE',   193 ],
+	[ 'EYE',    194 ],
 ]
 
 simulation_elem_src = []
