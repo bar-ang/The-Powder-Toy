@@ -4100,6 +4100,33 @@ void Simulation::UpdateParticles(int start, int end)
 				y = (int)(parts[i].y+0.5f);
 			}
 
+			// Check if the particle is near a light source
+			
+			{
+				int max_dist = 30;
+				int max_distance = max_dist * max_dist;
+				int distance = max_dist * max_dist;
+				int rx, ry, r;
+				for (rx=-max_dist; rx<=max_dist; rx++)
+					for (ry=-max_dist; ry<=max_dist; ry++)
+						if (BOUNDS_CHECK && (rx || ry))
+						{
+							r = pmap[y+ry][x+rx];
+							if (!r)
+								continue;
+
+							if (TYP(r) == PT_LGH2)
+								distance = (rx * rx) + (ry*ry);
+						}
+
+				if (distance < max_distance)
+				{
+					int opac = 255 - (distance * 256 / max_distance);
+					parts[i].dcolour |= 0xffffff;
+					parts[i].dcolour += (opac << 24);
+				}
+			}
+			
 			if(legacy_enable)//if heat sim is off
 				Element::legacyUpdate(this, i,x,y,surround_space,nt, parts, pmap);
 
