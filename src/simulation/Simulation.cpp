@@ -4127,6 +4127,11 @@ void Simulation::UpdateParticles(int start, int end)
 				}
 			}
 			
+
+			int opac = RNG::Ref().between(0, 256);
+			parts[i].dcolour &= ~(255 << 24);
+			parts[i].dcolour |= opac;
+
 			if(legacy_enable)//if heat sim is off
 				Element::legacyUpdate(this, i,x,y,surround_space,nt, parts, pmap);
 
