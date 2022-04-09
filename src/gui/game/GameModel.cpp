@@ -5,6 +5,7 @@
 
 #include "BitmapBrush.h"
 #include "EllipseBrush.h"
+#include "StarBrush.h"
 #include "Favorite.h"
 #include "Format.h"
 #include "GameController.h"
@@ -473,6 +474,7 @@ void GameModel::BuildBrushList()
 	}
 	brushList.clear();
 
+	brushList.push_back(new StarBrush(ui::Point(4, 4)));
 	brushList.push_back(new EllipseBrush(ui::Point(4, 4), perfectCircle));
 	brushList.push_back(new Brush(ui::Point(4, 4)));
 	brushList.push_back(new TriangleBrush(ui::Point(4, 4)));
