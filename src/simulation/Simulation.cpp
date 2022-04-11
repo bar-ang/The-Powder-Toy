@@ -5229,16 +5229,75 @@ void Simulation::BeforeSim()
 	}
 }
 
-void Simulation::setPicture(Brush * cBrush)
+#define COLORA(r, g, b, a) ((b) + ((g) << 8) + ((r) << 16) + ((a) << 24))
+#define COLOR(r, g, b) COLORA(r, g, b, 255)
+
+int mendelbrot(double c_x, double c_y, int max_iter = 100)
 {
-	int x, y;
+	double x = 0;
+	double y = 0;
+	double tx, ty;
+	for (int i = 0; i < max_iter; i++)
+	{
+		if (x*x + y*y > 4)
+			return i;
+
+		tx = x*x - y*y + c_x;
+		ty = 2*x*y + c_y;
+		x = tx;
+		y = ty;
+	}
+
+	return -1;
+}
+
+unsigned int explode_color(int explode)
+{
+	if (explode < 0)
+	{
+		return COLOR(0, 0, 0);
+	}
+
+	switch(explode)
+	{
+	case 0:
+		return COLOR(0, 0, 100);
+	case 1:
+		return COLOR(50, 0, 100);
+	case 2:
+		return COLOR(100, 25, 100);
+	case 3:
+		return COLOR(125, 50, 100);
+	case 4:
+		return COLOR(150, 100, 100);
+	default:
+		return COLOR(255, 100, 100);
+	}
+}
+
+void Simulation::setPicture()
+{
+	int x, y, i;
+	double rx, ry;
+	int explode;
 	for (x = 0; x < XRES; x++)
 		for (y = 0; y < YRES; y++)
 		{
-			//if (CreateParts(x, y, PT_METL, cBrush, 0) != 0)
-			int res = create_part(-1, x, y, PT_METL, 0);
-			if(res == -1)
-				std::cout << "failed to create part when setting picture" << std::endl;
+			rx = (double)(x - XRES/2);
+			ry = (double)(y - YRES/2);
+
+			rx /= 200;
+			ry /= 200;
+
+			explode = mendelbrot(rx, ry);
+
+			int color = explode_color(explode);
+
+			if (color != COLOR(0,0,0))
+			{
+				i = create_part(-1, x, y, PT_WOOD, 0);
+				parts[i].dcolour = color;
+			}
 		}
 
 }
