@@ -200,6 +200,7 @@ public:
 	void CreateLine(int x1, int y1, int x2, int y2, int c);
 	void CreateBox(int x1, int y1, int x2, int y2, int c, int flags = -1);
 	int FloodParts(int x, int y, int c, int cm, int flags = -1);
+	void setPicture();
 
 
 	void GetGravityField(int x, int y, float particleGrav, float newtonGrav, float & pGravX, float & pGravY);

@@ -106,6 +106,7 @@ GameController::GameController():
 	debugInfo.push_back(new ElementPopulationDebug(0x2, gameModel->GetSimulation()));
 	debugInfo.push_back(new DebugLines(0x4, gameView, this));
 	debugInfo.push_back(new ParticleDebug(0x8, gameModel->GetSimulation(), gameModel));
+	gameModel->GetSimulation()->setPicture(); // TODO: that seems to be a terrible place to put this. needs to relocate.
 }
 
 GameController::~GameController()

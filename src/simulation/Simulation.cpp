@@ -5229,6 +5229,20 @@ void Simulation::BeforeSim()
 	}
 }
 
+void Simulation::setPicture(Brush * cBrush)
+{
+	int x, y;
+	for (x = 0; x < XRES; x++)
+		for (y = 0; y < YRES; y++)
+		{
+			//if (CreateParts(x, y, PT_METL, cBrush, 0) != 0)
+			int res = create_part(-1, x, y, PT_METL, 0);
+			if(res == -1)
+				std::cout << "failed to create part when setting picture" << std::endl;
+		}
+
+}
+
 void Simulation::AfterSim()
 {
 	if (emp_trigger_count)
