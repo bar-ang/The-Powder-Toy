@@ -476,12 +476,12 @@ void GameModel::BuildBrushList()
 	}
 	brushList.clear();
 
-	brushList.push_back(new FractalTriangleBrush(ui::Point(4, 4)));
-	brushList.push_back(new MendelBrush(ui::Point(4, 4)));
-	brushList.push_back(new StarBrush(ui::Point(4, 4)));
 	brushList.push_back(new EllipseBrush(ui::Point(4, 4), perfectCircle));
 	brushList.push_back(new Brush(ui::Point(4, 4)));
 	brushList.push_back(new TriangleBrush(ui::Point(4, 4)));
+	brushList.push_back(new StarBrush(ui::Point(4, 4)));
+	brushList.push_back(new MendelBrush(ui::Point(4, 4)));
+	brushList.push_back(new FractalTriangleBrush(ui::Point(4, 4)));
 
 	//Load more from brushes folder
 	std::vector<ByteString> brushFiles = Platform::DirectorySearch(BRUSH_DIR, "", { ".ptb" });
