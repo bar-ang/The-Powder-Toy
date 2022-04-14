@@ -139,6 +139,7 @@ public:
 	void OpenOptions();
 	void OpenRenderOptions();
 	void OpenSaveWindow();
+	void OpenBrushPicker();
 	void SaveAsCurrent();
 	void OpenStamps();
 	void OpenElementSearch();

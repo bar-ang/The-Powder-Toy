@@ -1375,6 +1375,11 @@ void GameController::OpenRenderOptions()
 	ui::Engine::Ref().ShowWindow(renderOptions->GetView());
 }
 
+void GameController::OpenBrushPicker()
+{
+	std::cout << "pick brush" << std::endl;
+}
+
 void GameController::OpenSaveWindow()
 {
 	if(gameModel->GetUser().UserID)

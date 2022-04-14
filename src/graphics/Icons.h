@@ -12,6 +12,7 @@ enum Icon
 	IconVoteDown,
 	IconTag,
 	IconNew,
+	IconBrush,
 	IconLogin,
 	IconRenderSettings,
 	IconSimulationSettings,

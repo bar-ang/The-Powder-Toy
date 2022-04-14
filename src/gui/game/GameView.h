@@ -95,6 +95,7 @@ private:
 	ui::Button * downVoteButton;
 	ui::Button * upVoteButton;
 	ui::Button * tagSimulationButton;
+	ui::Button * brushesButton;
 	ui::Button * clearSimButton;
 	SplitButton * loginButton;
 	ui::Button * simulationOptionButton;

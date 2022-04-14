@@ -1,3 +1,4 @@
+#include <iostream>
 #include "GameView.h"
 
 #include "Brush.h"
@@ -280,12 +281,18 @@ GameView::GameView():
 	downVoteButton->SetActionCallback({ [this] { c->Vote(-1); } });
 	AddComponent(downVoteButton);
 
-	tagSimulationButton = new ui::Button(ui::Point(currentX, Size.Y-16), ui::Point(227, 15), "[no tags set]", "Add simulation tags");
+	tagSimulationButton = new ui::Button(ui::Point(currentX, Size.Y-16), ui::Point(212, 15), "[no tags set]", "Add simulation tags");
 	tagSimulationButton->Appearance.HorizontalAlign = ui::Appearance::AlignLeft;
 	tagSimulationButton->SetIcon(IconTag);
 	//currentX+=252;
 	tagSimulationButton->SetActionCallback({ [this] { c->OpenTags(); } });
 	AddComponent(tagSimulationButton);
+
+	brushesButton = new ui::Button(ui::Point(Size.X-159-15, Size.Y-16), ui::Point(17, 15), "", "Change brush");
+	brushesButton->SetIcon(IconBrush);
+	brushesButton->Appearance.Margin.Left+=2;
+	brushesButton->SetActionCallback({ [this] { c->OpenBrushPicker(); } });
+	AddComponent(brushesButton);
 
 	clearSimButton = new ui::Button(ui::Point(Size.X-159, Size.Y-16), ui::Point(17, 15), "", "Erase everything");
 	clearSimButton->SetIcon(IconNew);
