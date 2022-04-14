@@ -246,6 +246,7 @@ public:
 
 private:
 	CoordStack& getCoordStackSingleton();
+	int handleParticlesOutOfScreen(int i, int t);
 };
 
 #endif /* SIMULATION_H */

@@ -2922,12 +2922,6 @@ int Simulation::do_move(int i, int x, int y, float nxf, float nyf)
 				pmap[y][x] = 0;
 			if (ID(photons[y][x]) == i)
 				photons[y][x] = 0;
-			// kill_part if particle is out of bounds
-			if (nx < CELL || nx >= XRES - CELL || ny < CELL || ny >= YRES - CELL)
-			{
-				kill_part(i);
-				return -1;
-			}
 			if (elements[t].Properties & TYPE_ENERGY)
 				photons[ny][nx] = PMAP(i, t);
 			else if (t)
@@ -3455,6 +3449,54 @@ void Simulation::delete_part(int x, int y)//calls kill_part with the particle lo
 	kill_part(ID(i));
 }
 
+int Simulation::handleParticlesOutOfScreen(int i, int t)
+{
+	int x = (int)(parts[i].x+0.5f);
+	int y = (int)(parts[i].y+0.5f);
+	int move_x = x;
+	int move_y = y;
+	if (x < CELL)
+	{
+		move_x = XRES-CELL-1;
+	}
+	if (y < CELL)
+	{
+		move_y = YRES-CELL-1;
+	}
+	if (x >= XRES-CELL)
+	{
+		move_x = CELL;
+	}
+	if (y >= YRES-CELL)
+	{
+		move_y = CELL;
+	}
+
+	do_move(i, move_x, move_y, -0.5f, -0.5f);
+
+	x = (int)(parts[i].x+0.5f);
+	y = (int)(parts[i].y+0.5f);
+
+	//this kills any particle out of the screen, or in a wall where it isn't supposed to go
+	if (x<CELL || y<CELL || x>=XRES-CELL || y>=YRES-CELL /*||
+		(bmap[y/CELL][x/CELL] &&
+		(bmap[y/CELL][x/CELL]==WL_WALL ||
+		bmap[y/CELL][x/CELL]==WL_WALLELEC ||
+		bmap[y/CELL][x/CELL]==WL_ALLOWAIR ||
+		(bmap[y/CELL][x/CELL]==WL_DESTROYALL) ||
+		(bmap[y/CELL][x/CELL]==WL_ALLOWLIQUID && !(elements[t].Properties&TYPE_LIQUID)) ||
+		(bmap[y/CELL][x/CELL]==WL_ALLOWPOWDER && !(elements[t].Properties&TYPE_PART)) ||
+		(bmap[y/CELL][x/CELL]==WL_ALLOWGAS && !(elements[t].Properties&TYPE_GAS)) || //&& elements[t].Falldown!=0 && parts[i].type!=PT_FIRE && parts[i].type!=PT_SMKE && parts[i].type!=PT_CFLM) ||
+		(bmap[y/CELL][x/CELL]==WL_ALLOWENERGY && !(elements[t].Properties&TYPE_ENERGY)) ||
+		(bmap[y/CELL][x/CELL]==WL_EWALL && !emap[y/CELL][x/CELL])) && (t!=PT_STKM) && (t!=PT_STKM2) && (t!=PT_FIGH))*/)
+		{
+		//	kill_part(i);
+			return 1;
+		}
+
+	return 0;
+}
+
 void Simulation::UpdateParticles(int start, int end)
 {
 	int i, j, x, y, t, nx, ny, r, surround_space, s, rt, nt;
@@ -3479,22 +3521,10 @@ void Simulation::UpdateParticles(int start, int end)
 			x = (int)(parts[i].x+0.5f);
 			y = (int)(parts[i].y+0.5f);
 
-			//this kills any particle out of the screen, or in a wall where it isn't supposed to go
-			if (x<CELL || y<CELL || x>=XRES-CELL || y>=YRES-CELL ||
-			        (bmap[y/CELL][x/CELL] &&
-			         (bmap[y/CELL][x/CELL]==WL_WALL ||
-			          bmap[y/CELL][x/CELL]==WL_WALLELEC ||
-			          bmap[y/CELL][x/CELL]==WL_ALLOWAIR ||
-			          (bmap[y/CELL][x/CELL]==WL_DESTROYALL) ||
-			          (bmap[y/CELL][x/CELL]==WL_ALLOWLIQUID && !(elements[t].Properties&TYPE_LIQUID)) ||
-			          (bmap[y/CELL][x/CELL]==WL_ALLOWPOWDER && !(elements[t].Properties&TYPE_PART)) ||
-			          (bmap[y/CELL][x/CELL]==WL_ALLOWGAS && !(elements[t].Properties&TYPE_GAS)) || //&& elements[t].Falldown!=0 && parts[i].type!=PT_FIRE && parts[i].type!=PT_SMKE && parts[i].type!=PT_CFLM) ||
-					  (bmap[y/CELL][x/CELL]==WL_ALLOWENERGY && !(elements[t].Properties&TYPE_ENERGY)) ||
-			          (bmap[y/CELL][x/CELL]==WL_EWALL && !emap[y/CELL][x/CELL])) && (t!=PT_STKM) && (t!=PT_STKM2) && (t!=PT_FIGH)))
-			{
-				kill_part(i);
-				continue;
-			}
+			//if (handleParticlesOutOfScreen(i, x, y, t))
+			//	continue;
+
+			do_move(i, 20, 20, -0.5f, -0.5f);
 
 			// Make sure that STASIS'd particles don't tick.
 			if (bmap[y/CELL][x/CELL] == WL_STASIS && emap[y/CELL][x/CELL]<8) {
