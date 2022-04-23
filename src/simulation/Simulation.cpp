@@ -16,6 +16,7 @@
 #include "Gravity.h"
 #include "Sample.h"
 #include "Snapshot.h"
+#include "rigid.h"
 
 #include "Misc.h"
 #include "ToolClasses.h"
@@ -2307,6 +2308,7 @@ void Simulation::clear_sim(void)
 	std::fill(elementCount, elementCount+PT_NUM, 0);
 	elementRecount = true;
 	fighcount = 0;
+	rigidcount = 0;
 	player.spwn = 0;
 	player.spawnID = -1;
 	player.rocketBoots = false;
@@ -3438,6 +3440,31 @@ void Simulation::create_cherenkov_photon(int pp)//photons from NEUT going throug
 	parts[i].vy *= r;
 }
 
+void Simulation::RefreshRigid(Rigid *rigid)
+{
+	int x, y, t, rx, ry, i;
+	x = rigid->x;
+	y = rigid->y;
+	t = rigid->t;
+
+	rigid->delete_frame();
+	auto parts = std::unique_ptr<std::vector<int>>(new std::vector<int>());
+	for(rx = -10; rx <= 10; rx++)
+		for(ry = -10; ry <= 10; ry++){
+			i = create_part(-1, x-rx, y-ry, PT_WATR);
+			parts->push_back(i);
+		}
+
+	rigid->delete_frame = [parts = std::move(parts)]()
+	{
+		while(!parts.empty())
+		{
+			delete_part(parts.back());
+			parts->pop_back();
+		}
+	};
+}
+
 void Simulation::delete_part(int x, int y)//calls kill_part with the particle located at x,y
 {
 	unsigned i;
@@ -4098,6 +4125,12 @@ void Simulation::UpdateParticles(int start, int end)
 					continue;
 				x = (int)(parts[i].x+0.5f);
 				y = (int)(parts[i].y+0.5f);
+			}
+
+			{
+				int i;
+				for(i = 0; i < rigidcount; i++)
+					RefreshRigid(rigids+i);
 			}
 
 			if(legacy_enable)//if heat sim is off

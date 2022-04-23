@@ -9,6 +9,7 @@ simulation_tool_ids = [
 	[ 'CYCL', 7 ],
 	[ 'AMBM', 8 ],
 	[ 'AMBP', 9 ],
+	[ 'IMPR', 10 ],
 ]
 
 simulation_tool_src = []

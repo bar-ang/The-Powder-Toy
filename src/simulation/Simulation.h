@@ -16,6 +16,7 @@
 #include "BuiltinGOL.h"
 #include "MenuSection.h"
 #include "CoordStack.h"
+#include "rigid.h"
 
 #include "Element.h"
 
@@ -71,6 +72,8 @@ public:
 	playerst player;
 	playerst player2;
 	playerst fighters[MAX_FIGHTERS]; //Defined in Stickman.h
+	Rigid rigids[MAX_RIGIDS];
+	unsigned int rigidcount;
 	unsigned char fighcount; //Contains the number of fighters
 	bool gravWallChanged;
 	//Portals and Wifi
@@ -238,6 +241,7 @@ public:
 
 private:
 	std::vector<CustomGOLData> customGol;
+	void RefreshRigid(Rigid *rigid);
 
 public:
 	const CustomGOLData *GetCustomGOLByRule(int rule) const;
