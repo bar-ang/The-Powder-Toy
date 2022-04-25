@@ -156,6 +156,22 @@ void Renderer::RenderBegin()
 #endif
 }
 
+void Renderer::triangle(int x)
+{
+	transform = [vx = x](int x, int y)
+	{
+		double fvx = (double)vx;
+		double fx = (double)x;
+		double fy = (double)y;
+		double s = fvx * (VIDYRES - fy) / VIDYRES;
+		double t = ((VIDXRES - fvx)*y)/VIDYRES + fvx;
+
+		double nx = (fx * t + (VIDXRES-fx) * s) / VIDXRES;
+
+		return std::make_pair((int)nx, y);
+	};
+}
+
 void Renderer::shift(int dx, int dy)
 {
 	transform = [dx, dy](int x, int y)
