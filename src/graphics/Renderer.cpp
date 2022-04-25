@@ -156,6 +156,13 @@ void Renderer::RenderBegin()
 #endif
 }
 
+void Renderer::shift(int dx, int dy)
+{
+	transform = [dx, dy](int x, int y)
+	{
+		return std::make_pair(x + dx, y + dy);
+	};
+}
 
 void Renderer::applyTransformation()
 {
@@ -174,6 +181,20 @@ void Renderer::applyTransformation()
 			nvid[POS(x, y)] = vid[POS(i, j)];
 		}
 	memcpy(vid, nvid, sizeof(nvid));
+}
+
+void Renderer::rotate(int x, int y, double theta)
+{
+
+	transform = [px = x, py = y, theta](int x, int y)
+	{
+		int can_x = x - px;
+		int can_y = y - py;
+		int nx = (int)(can_x * cos(theta) - can_y * sin(theta)) + px;
+		int ny = (int)(can_x * sin(theta) + can_y * cos(theta)) + py;
+
+		return std::make_pair(nx, ny);
+	};
 }
 
 void Renderer::RenderEnd()

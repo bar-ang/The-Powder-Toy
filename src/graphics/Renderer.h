@@ -172,6 +172,8 @@ public:
 
 private:
 	int gridSize;
+	void shift(int dx, int dy);
+	void rotate(int x, int y, double theta);
 	void applyTransformation();
 #ifdef OGLR
 	GLuint zoomTex, airBuf, fireAlpha, glowAlpha, blurAlpha, partsFboTex, partsFbo, partsTFX, partsTFY, airPV, airVY, airVX;
