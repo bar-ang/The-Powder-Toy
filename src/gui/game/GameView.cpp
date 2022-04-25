@@ -2009,6 +2009,9 @@ void GameView::OnDraw()
 				}
 				else
 				{
+					auto t = ren->transform(finalCurrentMouse.X, finalCurrentMouse.Y);
+					finalCurrentMouse.X = TRANSFORM_X(t);
+					finalCurrentMouse.Y = TRANSFORM_Y(t);
 					activeBrush->RenderPoint(ren, finalCurrentMouse);
 				}
 			}

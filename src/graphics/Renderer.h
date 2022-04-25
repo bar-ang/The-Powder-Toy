@@ -3,6 +3,8 @@
 #include "Config.h"
 
 #include <vector>
+#include <iostream>
+#include <functional>
 #ifdef OGLR
 #include "OpenGLHeaders.h"
 #endif
@@ -12,6 +14,9 @@
 
 class RenderPreset;
 class Simulation;
+
+#define TRANSFORM_X std::get<0>
+#define TRANSFORM_Y std::get<1>
 
 struct gcache_item
 {
@@ -74,6 +79,7 @@ public:
 	int zoomScopeSize;
 	bool zoomEnabled;
 	int ZFACTOR;
+	std::function<std::pair<int, int>(int, int)> transform;
 
 	//Renderers
 	void RenderBegin();
@@ -166,6 +172,7 @@ public:
 
 private:
 	int gridSize;
+	void applyTransformation();
 #ifdef OGLR
 	GLuint zoomTex, airBuf, fireAlpha, glowAlpha, blurAlpha, partsFboTex, partsFbo, partsTFX, partsTFY, airPV, airVY, airVX;
 	GLuint fireProg, airProg_Pressure, airProg_Velocity, airProg_Cracker, lensProg;

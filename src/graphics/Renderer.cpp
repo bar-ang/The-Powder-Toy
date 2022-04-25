@@ -38,6 +38,10 @@
 #define VIDYRES YRES
 #endif
 
+#define POS(x, y) ((y) * VIDXRES + (x))
+#define DEG_TO_RAD(d) (((double)d) * M_PI/180)
+
+#define IN_BOUND(x, y) ((x) >= 0 && (y) >= 0 && (x) < VIDXRES && (y) < VIDYRES)
 
 void Renderer::RenderBegin()
 {
@@ -147,8 +151,29 @@ void Renderer::RenderBegin()
 		vid = oldVid;
 	}
 
+	applyTransformation();
 	FinaliseParts();
 #endif
+}
+
+
+void Renderer::applyTransformation()
+{
+	pixel nvid[VIDXRES * VIDYRES] = {0};
+	int x, y;
+	for(int i = 0; i < VIDXRES; i++)
+		for(int j = 0; j < VIDYRES; j++)
+		{
+			auto t = transform(i, j);
+			x = TRANSFORM_X(t);
+			y = TRANSFORM_Y(t);
+
+			if (!IN_BOUND(x, y))
+				continue;
+
+			nvid[POS(x, y)] = vid[POS(i, j)];
+		}
+	memcpy(vid, nvid, sizeof(nvid));
 }
 
 void Renderer::RenderEnd()
@@ -2563,6 +2588,11 @@ Renderer::Renderer(Graphics * g, Simulation * sim):
 
 	//Set defauly display modes
 	ResetModes();
+
+	transform = [](int x, int y)
+	{
+		return std::make_pair(x, y);
+	};
 
 	//Render mode presets. Possibly load from config in future?
 	renderModePresets.push_back({
