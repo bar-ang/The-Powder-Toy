@@ -3177,9 +3177,14 @@ bool Simulation::part_change_type(int i, int x, int y, int t)
 	return false;
 }
 
+int Simulation::create_part(int p, int x, int y, int t, int v)
+{
+	return create_part_3d(p, x, y, 0, t, v);
+}
+
 //the function for creating a particle, use p=-1 for creating a new particle, -2 is from a brush, or a particle number to replace a particle.
 //tv = Type (PMAPBITS bits) + Var (32-PMAPBITS bits), var is usually 0
-int Simulation::create_part(int p, int x, int y, int t, int v)
+int Simulation::create_part_3d(int p, int x, int y, int z, int t, int v)
 {
 	int i, oldType = PT_NONE;
 
@@ -3288,7 +3293,7 @@ int Simulation::create_part(int p, int x, int y, int t, int v)
 	parts[i].type = t;
 	parts[i].x = (float)x;
 	parts[i].y = (float)y;
-	parts[i].z = 0.0f;
+	parts[i].z = (float)z;
 	parts[i].dcolour = (int)((0.5 + parts[i].z / 2) * 256 / NUM_Z_LAYERS) << 24;
 
 	//and finally set the pmap/photon maps to the newly created particle
