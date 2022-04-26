@@ -5,11 +5,14 @@
 #include <vector>
 #include "StructProperty.h"
 
+#define NUM_Z_LAYERS 5
+
 struct Particle
 {
 	int type;
 	int life, ctype;
 	float x, y, vx, vy;
+	float z;
 	float temp;
 	int tmp3;
 	int tmp4;
