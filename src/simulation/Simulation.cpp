@@ -932,10 +932,10 @@ bool Simulation::flood_water(int x, int y, int i)
 				{
 					// Try to move the water to a random position on this line, because there's probably a free location somewhere
 					int randPos = RNG::Ref().between(x, x2);
-					if (!pmap[y - 1][randPos] && eval_move(parts[i].type, randPos, y - 1, nullptr))
+					if (!pmap[y - 1][randPos] && eval_move(parts[i].type, randPos, y - 1, 0, nullptr))
 						x = randPos;
 					// Couldn't move to random position, so try the original position on the left
-					else if (!eval_move(parts[i].type, x, y - 1, nullptr))
+					else if (!eval_move(parts[i].type, x, y - 1, 0, nullptr))
 						continue;
 
 					int oldx = (int)(parts[i].x + 0.5f);
@@ -1378,7 +1378,7 @@ void Simulation::ApplyDecorationFill(Renderer *ren, int x, int y, int colR, int 
 }
 #endif
 
-int Simulation::Tool(int x, int y, int tool, int brushX, int brushY, float strength)
+int Simulation::Tool(int x, int y, int z, int tool, int brushX, int brushY, float strength)
 {
 	Particle * cpart = NULL;
 	int r;
@@ -1390,7 +1390,7 @@ int Simulation::Tool(int x, int y, int tool, int brushX, int brushY, float stren
 }
 
 #ifndef RENDERER
-int Simulation::ToolBrush(int positionX, int positionY, int tool, Brush * cBrush, float strength)
+int Simulation::ToolBrush(int positionX, int positionY, int positionZ, int tool, Brush * cBrush, float strength)
 {
 	if(cBrush)
 	{
@@ -1399,12 +1399,12 @@ int Simulation::ToolBrush(int positionX, int positionY, int tool, Brush * cBrush
 		for(int y = 0; y < sizeY; y++)
 			for(int x = 0; x < sizeX; x++)
 				if(bitmap[(y*sizeX)+x] && (positionX+(x-radiusX) >= 0 && positionY+(y-radiusY) >= 0 && positionX+(x-radiusX) < XRES && positionY+(y-radiusY) < YRES))
-					Tool(positionX + (x - radiusX), positionY + (y - radiusY), tool, positionX, positionY, strength);
+					Tool(positionX + (x - radiusX), positionY + (y - radiusY), positionZ, tool, positionX, positionY, strength);
 	}
 	return 0;
 }
 
-void Simulation::ToolLine(int x1, int y1, int x2, int y2, int tool, Brush * cBrush, float strength)
+void Simulation::ToolLine(int x1, int y1, int x2, int y2, int z, int tool, Brush * cBrush, float strength)
 {
 	bool reverseXY = abs(y2-y1) > abs(x2-x1);
 	int x, y, dx, dy, sy, rx = cBrush->GetRadius().X, ry = cBrush->GetRadius().Y;
@@ -1438,9 +1438,9 @@ void Simulation::ToolLine(int x1, int y1, int x2, int y2, int tool, Brush * cBru
 	for (x=x1; x<=x2; x++)
 	{
 		if (reverseXY)
-			ToolBrush(y, x, tool, cBrush, strength);
+			ToolBrush(y, x, z, tool, cBrush, strength);
 		else
-			ToolBrush(x, y, tool, cBrush, strength);
+			ToolBrush(x, y, z, tool, cBrush, strength);
 		e += de;
 		if (e >= 0.5f)
 		{
@@ -1448,15 +1448,15 @@ void Simulation::ToolLine(int x1, int y1, int x2, int y2, int tool, Brush * cBru
 			if (!(rx+ry) && ((y1<y2) ? (y<=y2) : (y>=y2)))
 			{
 				if (reverseXY)
-					ToolBrush(y, x, tool, cBrush, strength);
+					ToolBrush(y, x, z, tool, cBrush, strength);
 				else
-					ToolBrush(x, y, tool, cBrush, strength);
+					ToolBrush(x, y, z, tool, cBrush, strength);
 			}
 			e -= 1.0f;
 		}
 	}
 }
-void Simulation::ToolBox(int x1, int y1, int x2, int y2, int tool, float strength)
+void Simulation::ToolBox(int x1, int y1, int x2, int y2, int z, int tool, float strength)
 {
 	int brushX, brushY;
 	brushX = ((x1 + x2) / 2);
@@ -1476,7 +1476,7 @@ void Simulation::ToolBox(int x1, int y1, int x2, int y2, int tool, float strengt
 	}
 	for (j=y1; j<=y2; j++)
 		for (i=x1; i<=x2; i++)
-			Tool(i, j, tool, brushX, brushY, strength);
+			Tool(i, j, z, tool, brushX, brushY, strength);
 }
 #endif
 
@@ -1671,7 +1671,7 @@ int Simulation::FloodWalls(int x, int y, int wall, int bm)
 }
 
 #ifndef RENDERER
-int Simulation::CreateParts(int positionX, int positionY, int c, Brush * cBrush, int flags)
+int Simulation::CreateParts(int positionX, int positionY, int positionZ, int c, Brush * cBrush, int flags)
 {
 	if (flags == -1)
 		flags = replaceModeFlags;
@@ -1690,7 +1690,7 @@ int Simulation::CreateParts(int positionX, int positionY, int c, Brush * cBrush,
 				newlife = 55;
 			c = PMAP(newlife, c);
 			lightningRecreate = currentTick + std::max(newlife / 4, 1);
-			return CreatePartFlags(positionX, positionY, c, flags);
+			return CreatePartFlags(positionX, positionY, positionZ, c, flags);
 		}
 		else if (c == PT_TESC)
 		{
@@ -1706,7 +1706,7 @@ int Simulation::CreateParts(int positionX, int positionY, int c, Brush * cBrush,
 			{
 				if (bitmap[(y*sizeX)+x] && (positionX+(x-radiusX) >= 0 && positionY+(y-radiusY) >= 0 && positionX+(x-radiusX) < XRES && positionY+(y-radiusY) < YRES))
 				{
-					CreatePartFlags(positionX+(x-radiusX), positionY+(y-radiusY), c, flags);
+					CreatePartFlags(positionX+(x-radiusX), positionY+(y-radiusY), positionZ, c, flags);
 				}
 			}
 		}
@@ -1714,10 +1714,9 @@ int Simulation::CreateParts(int positionX, int positionY, int c, Brush * cBrush,
 	return 0;
 }
 
-int Simulation::CreateParts(int x, int y, int rx, int ry, int c, int flags)
+int Simulation::CreateParts(int x, int y, int z, int rx, int ry, int c, int flags)
 {
 	bool created = false;
-
 	if (flags == -1)
 		flags = replaceModeFlags;
 
@@ -1743,12 +1742,12 @@ int Simulation::CreateParts(int x, int y, int rx, int ry, int c, int flags)
 
 	for (int j = -ry; j <= ry; j++)
 		for (int i = -rx; i <= rx; i++)
-			if (CreatePartFlags(x+i, y+j, c, flags))
+			if (CreatePartFlags(x+i, y+j, z, c, flags))
 				created = true;
 	return !created;
 }
 
-void Simulation::CreateLine(int x1, int y1, int x2, int y2, int c, Brush * cBrush, int flags)
+void Simulation::CreateLine(int x1, int y1, int x2, int y2, int z, int c, Brush * cBrush, int flags)
 {
 	int x, y, dx, dy, sy, rx = cBrush->GetRadius().X, ry = cBrush->GetRadius().Y;
 	bool reverseXY = abs(y2-y1) > abs(x2-x1);
@@ -1782,9 +1781,9 @@ void Simulation::CreateLine(int x1, int y1, int x2, int y2, int c, Brush * cBrus
 	for (x=x1; x<=x2; x++)
 	{
 		if (reverseXY)
-			CreateParts(y, x, c, cBrush, flags);
+			CreateParts(y, x, z, c, cBrush, flags);
 		else
-			CreateParts(x, y, c, cBrush, flags);
+			CreateParts(x, y, z, c, cBrush, flags);
 		e += de;
 		if (e >= 0.5f)
 		{
@@ -1792,9 +1791,9 @@ void Simulation::CreateLine(int x1, int y1, int x2, int y2, int c, Brush * cBrus
 			if (!(rx+ry) && ((y1<y2) ? (y<=y2) : (y>=y2)))
 			{
 				if (reverseXY)
-					CreateParts(y, x, c, cBrush, flags);
+					CreateParts(y, x, z, c, cBrush, flags);
 				else
-					CreateParts(x, y, c, cBrush, flags);
+					CreateParts(x, y, z, c, cBrush, flags);
 			}
 			e -= 1.0f;
 		}
@@ -1802,7 +1801,7 @@ void Simulation::CreateLine(int x1, int y1, int x2, int y2, int c, Brush * cBrus
 }
 #endif
 
-int Simulation::CreatePartFlags(int x, int y, int c, int flags)
+int Simulation::CreatePartFlags(int x, int y, int z, int c, int flags)
 {
 	if (x < 0 || y < 0 || x >= XRES || y >= YRES)
 	{
@@ -1819,7 +1818,7 @@ int Simulation::CreatePartFlags(int x, int y, int c, int flags)
 			(photons[y][x] && TYP(photons[y][x]) == replaceModeSelected))
 		{
 			if (c)
-				create_part(photons[y][x] ? ID(photons[y][x]) : ID(pmap[y][x]), x, y, TYP(c), ID(c));
+				create_part_3d(photons[y][x] ? ID(photons[y][x]) : ID(pmap[y][x]), x, y, z, TYP(c), ID(c));
 			else
 				delete_part(x, y);
 		}
@@ -1845,7 +1844,7 @@ int Simulation::CreatePartFlags(int x, int y, int c, int flags)
 	}
 	else
 	{
-		if (create_part(-2, x, y, TYP(c), ID(c)) == -1)
+		if (create_part_3d(-2, x, y, z, TYP(c), ID(c)) == -1)
 		{
 			return 1;
 		}
@@ -1857,7 +1856,7 @@ int Simulation::CreatePartFlags(int x, int y, int c, int flags)
 }
 
 //Now simply creates a 0 pixel radius line without all the complicated flags / other checks
-void Simulation::CreateLine(int x1, int y1, int x2, int y2, int c)
+void Simulation::CreateLine(int x1, int y1, int x2, int y2, int z, int c)
 {
 	bool reverseXY = abs(y2-y1) > abs(x2-x1);
 	int x, y, dx, dy, sy;
@@ -1894,9 +1893,9 @@ void Simulation::CreateLine(int x1, int y1, int x2, int y2, int c)
 	for (x=x1; x<=x2; x++)
 	{
 		if (reverseXY)
-			create_part(-1, y, x, c, v);
+			create_part_3d(-1, y, x, z, c, v);
 		else
-			create_part(-1, x, y, c, v);
+			create_part_3d(-1, x, y, z, c, v);
 		e += de;
 		if (e >= 0.5f)
 		{
@@ -1904,9 +1903,9 @@ void Simulation::CreateLine(int x1, int y1, int x2, int y2, int c)
 			if ((y1<y2) ? (y<=y2) : (y>=y2))
 			{
 				if (reverseXY)
-					create_part(-1, y, x, c, v);
+					create_part_3d(-1, y, x, z, c, v);
 				else
-					create_part(-1, x, y, c, v);
+					create_part_3d(-1, x, y, z, c, v);
 			}
 			e -= 1.0f;
 		}
@@ -1914,7 +1913,7 @@ void Simulation::CreateLine(int x1, int y1, int x2, int y2, int c)
 }
 
 #ifndef RENDERER
-void Simulation::CreateBox(int x1, int y1, int x2, int y2, int c, int flags)
+void Simulation::CreateBox(int x1, int y1, int x2, int y2, int z, int c, int flags)
 {
 	int i, j;
 	if (x1>x2)
@@ -1931,10 +1930,10 @@ void Simulation::CreateBox(int x1, int y1, int x2, int y2, int c, int flags)
 	}
 	for (j=y2; j>=y1; j--)
 		for (i=x1; i<=x2; i++)
-			CreateParts(i, j, 0, 0, c, flags);
+			CreateParts(i, j, 0, 0, z, c, flags);
 }
 
-int Simulation::FloodParts(int x, int y, int fullc, int cm, int flags)
+int Simulation::FloodParts(int x, int y, int z, int fullc, int cm, int flags)
 {
 	int c = TYP(fullc);
 	int x1, x2, dy = (c<PT_NUM)?1:CELL;
@@ -2024,7 +2023,7 @@ int Simulation::FloodParts(int x, int y, int fullc, int cm, int flags)
 					created_something = 1;
 				}
 			}
-			else if (CreateParts(x, y, 0, 0, fullc, flags))
+			else if (CreateParts(x, y, z, 0, fullc, flags))
 				created_something = 1;
 		}
 
@@ -2276,7 +2275,7 @@ void Simulation::create_arc(int sx, int sy, int dx, int dy, int midpoints, int v
 			xmid[i+1] += RNG::Ref().between(0, variance - 1) - voffset;
 			ymid[i+1] += RNG::Ref().between(0, variance - 1) - voffset;
 		}
-		CreateLine(xmid[i], ymid[i], xmid[i+1], ymid[i+1], type);
+		CreateLine(xmid[i], ymid[i], xmid[i+1], ymid[i+1], 0, type);
 	}
 	free(xmid);
 	free(ymid);
@@ -2497,7 +2496,7 @@ void Simulation::init_can_move()
 0 = No move/Bounce
 2 = Both particles occupy the same space.
  */
-int Simulation::eval_move(int pt, int nx, int ny, unsigned *rr)
+int Simulation::eval_move(int pt, int nx, int ny, int nz, unsigned *rr)
 {
 	unsigned r;
 	int result;
@@ -2580,7 +2579,7 @@ int Simulation::eval_move(int pt, int nx, int ny, unsigned *rr)
 	return result;
 }
 
-int Simulation::try_move(int i, int x, int y, int nx, int ny)
+int Simulation::try_move(int i, int x, int y, int z, int nx, int ny, int nz)
 {
 	unsigned r = 0, e;
 
@@ -2589,7 +2588,7 @@ int Simulation::try_move(int i, int x, int y, int nx, int ny)
 	if (nx<0 || ny<0 || nx>=XRES || ny>=YRES)
 		return 1;
 
-	e = eval_move(parts[i].type, nx, ny, &r);
+	e = eval_move(parts[i].type, nx, ny, nz, &r);
 
 	/* half-silvered mirror */
 	if (!e && parts[i].type==PT_PHOT && ((TYP(r)==PT_BMTL && RNG::Ref().chance(1, 2)) || TYP(pmap[y][x])==PT_BMTL))
@@ -2886,9 +2885,9 @@ int Simulation::try_move(int i, int x, int y, int nx, int ny)
 }
 
 // try to move particle, and if successful update pmap and parts[i].x,y
-int Simulation::do_move(int i, int x, int y, float nxf, float nyf)
+int Simulation::do_move(int i, int x, int y, int z, float nxf, float nyf, float nzf)
 {
-	int nx = (int)(nxf+0.5f), ny = (int)(nyf+0.5f), result;
+	int nx = (int)(nxf+0.5f), ny = (int)(nyf+0.5f), nz = (int)(nzf+0.5f), result;
 	if (edgeMode == 2)
 	{
 		bool x_ok = (nx >= CELL && nx < XRES-CELL);
@@ -2910,7 +2909,7 @@ int Simulation::do_move(int i, int x, int y, float nxf, float nyf)
 	}
 	if (parts[i].type == PT_NONE)
 		return 0;
-	result = try_move(i, x, y, nx, ny);
+	result = try_move(i, x, y, z, nx, ny, nz);
 	if (result)
 	{
 		int t = parts[i].type;
@@ -2992,7 +2991,7 @@ int Simulation::is_blocking(int t, int x, int y)
 		return 0;
 	}
 
-	return !eval_move(t, x, y, NULL);
+	return !eval_move(t, x, y, 0, NULL);
 }
 
 int Simulation::is_boundary(int pt, int x, int y)
@@ -3241,7 +3240,7 @@ int Simulation::create_part(int p, int x, int y, int t, int v)
 		// If there isn't a particle but there is a wall, check whether the new particle is allowed to be in it
 		//   (not "!=2" for wall check because eval_move returns 1 for moving into empty space)
 		// If there's no particle and no wall, assume creation is allowed
-		if (pmap[y][x] ? (eval_move(t, x, y, NULL) != 2) : (bmap[y/CELL][x/CELL] && eval_move(t, x, y, NULL) == 0))
+		if (pmap[y][x] ? (eval_move(t, x, y, 0, NULL) != 2) : (bmap[y/CELL][x/CELL] && eval_move(t, x, y, 0, NULL) == 0))
 		{
 			return -1;
 		}
@@ -3289,6 +3288,7 @@ int Simulation::create_part(int p, int x, int y, int t, int v)
 	parts[i].type = t;
 	parts[i].x = (float)x;
 	parts[i].y = (float)y;
+	parts[i].z = 0.0f;
 
 	//and finally set the pmap/photon maps to the newly created particle
 	if (elements[t].Properties & TYPE_ENERGY)
@@ -4183,7 +4183,7 @@ killed:
 					}
 					//block if particle can't move (0), or some special cases where it returns 1 (can_move = 3 but returns 1 meaning particle will be eaten)
 					//also photons are still blocked (slowed down) by any particle (even ones it can move through), and absorb wall also blocks particles
-					int eval = eval_move(t, fin_x, fin_y, NULL);
+					int eval = eval_move(t, fin_x, fin_y, 0, NULL);
 					if (!eval || (can_move[t][TYP(pmap[fin_y][fin_x])] == 3 && eval == 1) || (t == PT_PHOT && pmap[fin_y][fin_x]) || bmap[fin_y/CELL][fin_x/CELL]==WL_DESTROYALL || closedEholeStart!=(bmap[fin_y/CELL][fin_x/CELL] == WL_EHOLE && !emap[fin_y/CELL][fin_x/CELL]))
 					{
 						// found an obstacle
@@ -4274,7 +4274,7 @@ killed:
 						continue;
 					}
 
-					if (eval_move(PT_PHOT, fin_x, fin_y, NULL))
+					if (eval_move(PT_PHOT, fin_x, fin_y, 0, NULL))
 					{
 						int rt = TYP(pmap[fin_y][fin_x]);
 						int lt = TYP(pmap[y][x]);
@@ -4322,12 +4322,12 @@ killed:
 				if (stagnant)//FLAG_STAGNANT set, was reflected on previous frame
 				{
 					// cast coords as int then back to float for compatibility with existing saves
-					if (!do_move(i, x, y, (float)fin_x, (float)fin_y) && parts[i].type) {
+					if (!do_move(i, x, y, 0, (float)fin_x, (float)fin_y, 0) && parts[i].type) {
 						kill_part(i);
 						continue;
 					}
 				}
-				else if (!do_move(i, x, y, fin_xf, fin_yf))
+				else if (!do_move(i, x, y, 0, fin_xf, fin_yf, 0))
 				{
 					if (parts[i].type == PT_NONE)
 						continue;
@@ -4391,7 +4391,7 @@ killed:
 			else if (elements[t].Falldown==0)
 			{
 				// gasses and solids (but not powders)
-				if (!do_move(i, x, y, fin_xf, fin_yf))
+				if (!do_move(i, x, y, 0, fin_xf, fin_yf, 0))
 				{
 					if (parts[i].type == PT_NONE)
 						continue;
@@ -4402,11 +4402,11 @@ killed:
 					if (fin_x<x-ISTP) fin_x=x-ISTP;
 					if (fin_y>y+ISTP) fin_y=y+ISTP;
 					if (fin_y<y-ISTP) fin_y=y-ISTP;
-					if (do_move(i, x, y, 0.25f+(float)(2*x-fin_x), 0.25f+fin_y))
+					if (do_move(i, x, y, 0, 0.25f+(float)(2*x-fin_x), 0.25f+fin_y, 0))
 					{
 						parts[i].vx *= elements[t].Collision;
 					}
-					else if (do_move(i, x, y, 0.25f+fin_x, 0.25f+(float)(2*y-fin_y)))
+					else if (do_move(i, x, y, 0, 0.25f+fin_x, 0.25f+(float)(2*y-fin_y), 0))
 					{
 						parts[i].vy *= elements[t].Collision;
 					}
@@ -4426,16 +4426,16 @@ killed:
 						goto movedone;
 				}
 				// liquids and powders
-				if (!do_move(i, x, y, fin_xf, fin_yf))
+				if (!do_move(i, x, y, 0, fin_xf, fin_yf, 0))
 				{
 					if (parts[i].type == PT_NONE)
 						continue;
-					if (fin_x!=x && do_move(i, x, y, fin_xf, clear_yf))
+					if (fin_x!=x && do_move(i, x, y, 0, fin_xf, clear_yf, 0))
 					{
 						parts[i].vx *= elements[t].Collision;
 						parts[i].vy *= elements[t].Collision;
 					}
-					else if (fin_y!=y && do_move(i, x, y, clear_xf, fin_yf))
+					else if (fin_y!=y && do_move(i, x, y, 0, clear_xf, fin_yf, 0))
 					{
 						parts[i].vx *= elements[t].Collision;
 						parts[i].vy *= elements[t].Collision;
@@ -4457,7 +4457,7 @@ killed:
 								mv = fabsf(dx);
 							dx /= mv;
 							dy /= mv;
-							if (do_move(i, x, y, clear_xf+dx, clear_yf+dy))
+							if (do_move(i, x, y, 0, clear_xf+dx, clear_yf+dy, 0))
 							{
 								parts[i].vx *= elements[t].Collision;
 								parts[i].vy *= elements[t].Collision;
@@ -4466,7 +4466,7 @@ killed:
 							swappage = dx;
 							dx = dy*r;
 							dy = -swappage*r;
-							if (do_move(i, x, y, clear_xf+dx, clear_yf+dy))
+							if (do_move(i, x, y, 0, clear_xf+dx, clear_yf+dy, 0))
 							{
 								parts[i].vx *= elements[t].Collision;
 								parts[i].vy *= elements[t].Collision;
@@ -4488,14 +4488,14 @@ killed:
 							for (j=clear_x+r; j>=0 && j>=clear_x-rt && j<clear_x+rt && j<XRES; j+=r)
 							{
 								if ((TYP(pmap[fin_y][j])!=t || bmap[fin_y/CELL][j/CELL])
-									&& (s=do_move(i, x, y, (float)j, fin_yf)))
+									&& (s=do_move(i, x, y, 0, (float)j, fin_yf, 0)))
 								{
 									nx = (int)(parts[i].x+0.5f);
 									ny = (int)(parts[i].y+0.5f);
 									break;
 								}
 								if (fin_y!=clear_y && (TYP(pmap[clear_y][j])!=t || bmap[clear_y/CELL][j/CELL])
-									&& (s=do_move(i, x, y, (float)j, clear_yf)))
+									&& (s=do_move(i, x, y, 0, (float)j, clear_yf, 0)))
 								{
 									nx = (int)(parts[i].x+0.5f);
 									ny = (int)(parts[i].y+0.5f);
@@ -4511,13 +4511,13 @@ killed:
 							if (s==1)
 								for (j=ny+r; j>=0 && j<YRES && j>=ny-rt && j<ny+rt; j+=r)
 								{
-									if ((TYP(pmap[j][nx])!=t || bmap[j/CELL][nx/CELL]) && do_move(i, nx, ny, (float)nx, (float)j))
+									if ((TYP(pmap[j][nx])!=t || bmap[j/CELL][nx/CELL]) && do_move(i, nx, ny, 0, (float)nx, (float)j, 0))
 										break;
 									if (TYP(pmap[j][nx])!=t || (bmap[j/CELL][nx/CELL] && bmap[j/CELL][nx/CELL]!=WL_STREAM))
 										break;
 								}
 							else if (s==-1) {} // particle is out of bounds
-							else if ((clear_x!=x||clear_y!=y) && do_move(i, x, y, clear_xf, clear_yf)) {}
+							else if ((clear_x!=x||clear_y!=y) && do_move(i, x, y, 0, clear_xf, clear_yf, 0)) {}
 							else parts[i].flags |= FLAG_STAGNANT;
 							parts[i].vx *= elements[t].Collision;
 							parts[i].vy *= elements[t].Collision;
@@ -4590,7 +4590,7 @@ killed:
 									break;
 								if (TYP(pmap[ny][nx])!=t || bmap[ny/CELL][nx/CELL])
 								{
-									s = do_move(i, x, y, nxf, nyf);
+									s = do_move(i, x, y, 0, nxf, nyf, 0);
 									if (s)
 									{
 										// Movement was successful
@@ -4648,14 +4648,14 @@ killed:
 									// If the space is anything except the same element (a wall, empty space, or occupied by a particle of a different element), try to move into it
 									if (TYP(pmap[ny][nx])!=t || bmap[ny/CELL][nx/CELL])
 									{
-										s = do_move(i, clear_x, clear_y, nxf, nyf);
+										s = do_move(i, clear_x, clear_y, 0, nxf, nyf, 0);
 										if (s || TYP(pmap[ny][nx])!=t || bmap[ny/CELL][nx/CELL]!=WL_STREAM)
 											break; // found the edge of the liquid and movement into it succeeded, so stop moving down
 									}
 								}
 							}
 							else if (s==-1) {} // particle is out of bounds
-							else if ((clear_x!=x||clear_y!=y) && do_move(i, x, y, clear_xf, clear_yf)) {} // try moving to the last clear position
+							else if ((clear_x!=x||clear_y!=y) && do_move(i, x, y, 0, clear_xf, clear_yf, 0)) {} // try moving to the last clear position
 							else parts[i].flags |= FLAG_STAGNANT;
 							parts[i].vx *= elements[t].Collision;
 							parts[i].vy *= elements[t].Collision;
@@ -4663,7 +4663,7 @@ killed:
 						else
 						{
 							// if interpolation was done, try moving to last clear position
-							if ((clear_x!=x||clear_y!=y) && do_move(i, x, y, clear_xf, clear_yf)) {}
+							if ((clear_x!=x||clear_y!=y) && do_move(i, x, y, 0, clear_xf, clear_yf, 0)) {}
 							else parts[i].flags |= FLAG_STAGNANT;
 							parts[i].vx *= elements[t].Collision;
 							parts[i].vy *= elements[t].Collision;

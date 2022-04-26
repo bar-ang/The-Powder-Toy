@@ -130,9 +130,9 @@ public:
 	int find_next_boundary(int pt, int *x, int *y, int dm, int *em);
 	void photoelectric_effect(int nx, int ny);
 	unsigned direction_to_map(float dx, float dy, int t);
-	int do_move(int i, int x, int y, float nxf, float nyf);
-	int try_move(int i, int x, int y, int nx, int ny);
-	int eval_move(int pt, int nx, int ny, unsigned *rr);
+	int do_move(int i, int x, int y, int z, float nxf, float nyf, float nzf);
+	int try_move(int i, int x, int y, int z, int nx, int ny, int nz);
+	int eval_move(int pt, int nx, int ny, int nz, unsigned *rr);
 	void init_can_move();
 	bool IsWallBlocking(int x, int y, int type);
 	bool IsElement(int type) const {
@@ -181,10 +181,10 @@ public:
 	void ApplyDecorationFill(Renderer *ren, int x, int y, int colR, int colG, int colB, int colA, int replaceR, int replaceG, int replaceB);
 
 	//Drawing Tools like HEAT, AIR, and GRAV
-	int Tool(int x, int y, int tool, int brushX, int brushY, float strength = 1.0f);
-	int ToolBrush(int x, int y, int tool, Brush * cBrush, float strength = 1.0f);
-	void ToolLine(int x1, int y1, int x2, int y2, int tool, Brush * cBrush, float strength = 1.0f);
-	void ToolBox(int x1, int y1, int x2, int y2, int tool, float strength = 1.0f);
+	int Tool(int x, int y, int z, int tool, int brushX, int brushY, float strength = 1.0f);
+	int ToolBrush(int x, int y, int z, int tool, Brush * cBrush, float strength = 1.0f);
+	void ToolLine(int x1, int y1, int x2, int y2, int z, int tool, Brush * cBrush, float strength = 1.0f);
+	void ToolBox(int x1, int y1, int x2, int y2, int z, int tool, float strength = 1.0f);
 
 	//Drawing Walls
 	int CreateWalls(int x, int y, int rx, int ry, int wall, Brush * cBrush = NULL);
@@ -193,13 +193,13 @@ public:
 	int FloodWalls(int x, int y, int wall, int bm);
 
 	//Drawing Particles
-	int CreateParts(int positionX, int positionY, int c, Brush * cBrush, int flags = -1);
-	int CreateParts(int x, int y, int rx, int ry, int c, int flags = -1);
-	int CreatePartFlags(int x, int y, int c, int flags);
-	void CreateLine(int x1, int y1, int x2, int y2, int c, Brush * cBrush, int flags = -1);
-	void CreateLine(int x1, int y1, int x2, int y2, int c);
-	void CreateBox(int x1, int y1, int x2, int y2, int c, int flags = -1);
-	int FloodParts(int x, int y, int c, int cm, int flags = -1);
+	int CreateParts(int positionX, int positionY, int positionZ, int c, Brush * cBrush, int flags = -1);
+	int CreateParts(int x, int y, int z, int rx, int ry, int c, int flags = -1);
+	int CreatePartFlags(int x, int y, int z, int c, int flags);
+	void CreateLine(int x1, int y1, int x2, int y2, int z, int c, Brush * cBrush, int flags = -1);
+	void CreateLine(int x1, int y1, int x2, int y2, int z, int c);
+	void CreateBox(int x1, int y1, int x2, int y2, int z, int c, int flags = -1);
+	int FloodParts(int x, int y, int z, int c, int cm, int flags = -1);
 
 
 	void GetGravityField(int x, int y, float particleGrav, float newtonGrav, float & pGravX, float & pGravY);

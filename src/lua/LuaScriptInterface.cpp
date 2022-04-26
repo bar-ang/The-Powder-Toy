@@ -1366,7 +1366,7 @@ int LuaScriptInterface::simulation_createParts(lua_State * l)
 	ui::Point tempRadius = brushList[brush]->GetRadius();
 	brushList[brush]->SetRadius(ui::Point(rx, ry));
 
-	int ret = luacon_sim->CreateParts(x, y, c, brushList[brush], flags);
+	int ret = luacon_sim->CreateParts(x, y, 0, c, brushList[brush], flags);
 	brushList[brush]->SetRadius(tempRadius);
 	lua_pushinteger(l, ret);
 	return 1;
@@ -1390,7 +1390,7 @@ int LuaScriptInterface::simulation_createLine(lua_State * l)
 	ui::Point tempRadius = brushList[brush]->GetRadius();
 	brushList[brush]->SetRadius(ui::Point(rx, ry));
 
-	luacon_sim->CreateLine(x1, y1, x2, y2, c, brushList[brush], flags);
+	luacon_sim->CreateLine(x1, y1, x2, y2, 0, c, brushList[brush], flags);
 	brushList[brush]->SetRadius(tempRadius);
 	return 0;
 }
@@ -1404,7 +1404,7 @@ int LuaScriptInterface::simulation_createBox(lua_State * l)
 	int c = luaL_optint(l,5,luacon_model->GetActiveTool(0)->GetToolID());
 	int flags = luaL_optint(l,6,luacon_sim->replaceModeFlags);
 
-	luacon_sim->CreateBox(x1, y1, x2, y2, c, flags);
+	luacon_sim->CreateBox(x1, y1, x2, y2, 0, c, flags);
 	return 0;
 }
 
@@ -1419,7 +1419,7 @@ int LuaScriptInterface::simulation_floodParts(lua_State * l)
 	if (x < 0 || x >= XRES || y < 0 || y >= YRES)
 		return luaL_error(l, "coordinates out of range (%d,%d)", x, y);
 	
-	int ret = luacon_sim->FloodParts(x, y, c, cm, flags);
+	int ret = luacon_sim->FloodParts(x, y, 0, c, cm, flags);
 	lua_pushinteger(l, ret);
 	return 1;
 }
@@ -1521,7 +1521,7 @@ int LuaScriptInterface::simulation_toolBrush(lua_State * l)
 	ui::Point tempRadius = brushList[brush]->GetRadius();
 	brushList[brush]->SetRadius(ui::Point(rx, ry));
 
-	int ret = luacon_sim->ToolBrush(x, y, tool, brushList[brush], strength);
+	int ret = luacon_sim->ToolBrush(x, y, 0, tool, brushList[brush], strength);
 	brushList[brush]->SetRadius(tempRadius);
 	lua_pushinteger(l, ret);
 	return 1;
@@ -1559,7 +1559,7 @@ int LuaScriptInterface::simulation_toolLine(lua_State * l)
 		windTool->SetStrength(oldStrength);
 	}
 	else
-		luacon_sim->ToolLine(x1, y1, x2, y2, tool, brushList[brush], strength);
+		luacon_sim->ToolLine(x1, y1, x2, y2, 0, tool, brushList[brush], strength);
 	brushList[brush]->SetRadius(tempRadius);
 	return 0;
 }

@@ -90,7 +90,7 @@ static int update(UPDATE_FUNC_ARGS)
 			nearp = Element_ETRD_nearestSparkablePart(sim, i);
 			if (nearp!=-1 && sim->parts_avg(i, nearp, PT_INSL)!=PT_INSL)
 			{
-				sim->CreateLine(x, y, (int)(parts[nearp].x+0.5f), (int)(parts[nearp].y+0.5f), PT_PLSM);
+				sim->CreateLine(x, y, 0, (int)(parts[nearp].x+0.5f), (int)(parts[nearp].y+0.5f), PT_PLSM);
 				parts[i].life = 20;
 				sim->part_change_type(i,x,y,ct);
 				ct = parts[i].ctype = PT_NONE;

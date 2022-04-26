@@ -39,13 +39,13 @@ Tool::~Tool() {}
 
 void Tool::Click(Simulation * sim, Brush * brush, ui::Point position) { }
 void Tool::Draw(Simulation * sim, Brush * brush, ui::Point position) {
-	sim->ToolBrush(position.X, position.Y, toolID, brush, strength);
+	sim->ToolBrush(position.X, position.Y, position.Z, toolID, brush, strength);
 }
 void Tool::DrawLine(Simulation * sim, Brush * brush, ui::Point position1, ui::Point position2, bool dragging) {
-	sim->ToolLine(position1.X, position1.Y, position2.X, position2.Y, toolID, brush, strength);
+	sim->ToolLine(position1.X, position1.Y, position2.X, position2.Y, position1.Z, toolID, brush, strength);
 }
 void Tool::DrawRect(Simulation * sim, Brush * brush, ui::Point position1, ui::Point position2) {
-	sim->ToolBox(position1.X, position1.Y, position2.X, position2.Y, toolID, strength);
+	sim->ToolBox(position1.X, position1.Y, position2.X, position2.Y, position1.Z, toolID, strength);
 }
 void Tool::DrawFill(Simulation * sim, Brush * brush, ui::Point position) {}
 
@@ -56,16 +56,16 @@ ElementTool::ElementTool(int id, String name, String description, int r, int g, 
 }
 ElementTool::~ElementTool() {}
 void ElementTool::Draw(Simulation * sim, Brush * brush, ui::Point position){
-	sim->CreateParts(position.X, position.Y, toolID, brush);
+	sim->CreateParts(position.X, position.Y, position.Z, toolID, brush);
 }
 void ElementTool::DrawLine(Simulation * sim, Brush * brush, ui::Point position1, ui::Point position2, bool dragging) {
-	sim->CreateLine(position1.X, position1.Y, position2.X, position2.Y, toolID, brush);
+	sim->CreateLine(position1.X, position1.Y, position2.X, position2.Y, position1.Z, toolID, brush);
 }
 void ElementTool::DrawRect(Simulation * sim, Brush * brush, ui::Point position1, ui::Point position2) {
-	sim->CreateBox(position1.X, position1.Y, position2.X, position2.Y, toolID);
+	sim->CreateBox(position1.X, position1.Y, position2.X, position2.Y, position1.Z, toolID);
 }
 void ElementTool::DrawFill(Simulation * sim, Brush * brush, ui::Point position) {
-	sim->FloodParts(position.X, position.Y, toolID, -1);
+	sim->FloodParts(position.X, position.Y, position.Z, toolID, -1);
 }
 
 
@@ -147,17 +147,17 @@ void WindTool::DrawLine(Simulation * sim, Brush * brush, ui::Point position1, ui
 void Element_LIGH_Tool::DrawLine(Simulation * sim, Brush * brush, ui::Point position1, ui::Point position2, bool dragging)
 {
 	if (dragging)
-		sim->CreateParts(position1.X, position1.Y, brush->GetRadius().X, brush->GetRadius().Y, PT_LIGH);
+		sim->CreateParts(position1.X, position1.Y, 0, brush->GetRadius().X, brush->GetRadius().Y, PT_LIGH);
 }
 
 
 void Element_TESC_Tool::DrawRect(Simulation * sim, Brush * brush, ui::Point position1, ui::Point position2) {
 	int radiusInfo = brush->GetRadius().X*4+brush->GetRadius().Y*4+7;
-	sim->CreateBox(position1.X, position1.Y, position2.X, position2.Y, toolID | PMAPID(radiusInfo));
+	sim->CreateBox(position1.X, position1.Y, position2.X, position2.Y, position1.Z, toolID | PMAPID(radiusInfo));
 }
 void Element_TESC_Tool::DrawFill(Simulation * sim, Brush * brush, ui::Point position) {
 	int radiusInfo = brush->GetRadius().X*4+brush->GetRadius().Y*4+7;
-	sim->FloodParts(position.X, position.Y, toolID | PMAPID(radiusInfo), -1);
+	sim->FloodParts(position.X, position.Y, position.Z, toolID | PMAPID(radiusInfo), -1);
 }
 
 

@@ -3,7 +3,7 @@
 namespace ui
 {
 
-//Lightweight 2D Int32/Float32 Point struct for UI
+//Lightweight 3D Int32/Float32 Point struct for UI
 struct Point
 {
 #if ENABLE_FLOAT_UI
