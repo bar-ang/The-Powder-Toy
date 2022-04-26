@@ -1742,9 +1742,10 @@ int Simulation::CreateParts(int x, int y, int rx, int ry, int c, int flags)
 		c = PMAP(newtmp, c);
 	}
 
+	int z = RNG::Ref().between(0, NUM_Z_LAYERS);
 	for (int j = -ry; j <= ry; j++)
 		for (int i = -rx; i <= rx; i++)
-			if (CreatePartFlags(x+i, y+j, c, flags))
+			if (CreatePartFlags(x+i, y+j, z, c, flags))
 				created = true;
 	return !created;
 }
@@ -2739,7 +2740,7 @@ int Simulation::try_move(int i, int x, int y, int z, int nx, int ny)
 			case PT_H2:
 				if (!(parts[i].tmp&0x1))
 				{
-					part_change_type(i, x, y, z, PT_PROT);
+					part_change_type(i, x, y, PT_PROT);
 					parts[i].ctype = 0;
 					parts[i].tmp2 = 0x1;
 
@@ -3196,14 +3197,14 @@ bool Simulation::part_change_type(int i, int x, int y, int t)
 	return false;
 }
 
-int Simulation::create_part(int p, int x, int y, int t, int v)
+int Simulation::create_part_2d(int p, int x, int y, int t, int v = -1)
 {
-	return create_part(p, x, y, 0, t, v)
+	return create_part(p, x, y, 0, t, v);
 }
 
 //the function for creating a particle, use p=-1 for creating a new particle, -2 is from a brush, or a particle number to replace a particle.
 //tv = Type (PMAPBITS bits) + Var (32-PMAPBITS bits), var is usually 0
-int Simulation::create_part(int p, int x, int y, int z, int t, int v)
+int Simulation::create_part(int p, int x, int y, int z, int t, int v = -1)
 {
 	int i, oldType = PT_NONE;
 
