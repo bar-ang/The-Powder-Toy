@@ -3289,6 +3289,7 @@ int Simulation::create_part(int p, int x, int y, int t, int v)
 	parts[i].x = (float)x;
 	parts[i].y = (float)y;
 	parts[i].z = 0.0f;
+	parts[i].dcolour = (int)((0.5 + parts[i].z / 2) * 256 / NUM_Z_LAYERS) << 24;
 
 	//and finally set the pmap/photon maps to the newly created particle
 	if (elements[t].Properties & TYPE_ENERGY)
