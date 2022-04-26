@@ -2499,6 +2499,11 @@ void Simulation::init_can_move()
  */
 int Simulation::eval_move(int pt, int nx, int ny, unsigned *rr)
 {
+	return eval_move(pt, nx, ny, 0, rr);
+}
+
+int Simulation::eval_move(int pt, int nx, int ny, int z, unsigned *rr)
+{
 	unsigned r;
 	int result;
 
@@ -3178,9 +3183,14 @@ bool Simulation::part_change_type(int i, int x, int y, int t)
 	return false;
 }
 
+int Simulation::create_part(int p, int x, int y, int t, int v)
+{
+	return create_part(p, x, y, 0, t, v)
+}
+
 //the function for creating a particle, use p=-1 for creating a new particle, -2 is from a brush, or a particle number to replace a particle.
 //tv = Type (PMAPBITS bits) + Var (32-PMAPBITS bits), var is usually 0
-int Simulation::create_part(int p, int x, int y, int t, int v)
+int Simulation::create_part(int p, int x, int y, int z, int t, int v)
 {
 	int i, oldType = PT_NONE;
 

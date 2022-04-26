@@ -133,6 +133,7 @@ public:
 	int do_move(int i, int x, int y, float nxf, float nyf);
 	int try_move(int i, int x, int y, int nx, int ny);
 	int eval_move(int pt, int nx, int ny, unsigned *rr);
+	int eval_move(int pt, int nx, int ny, int z, unsigned *rr);
 	void init_can_move();
 	bool IsWallBlocking(int x, int y, int type);
 	bool IsElement(int type) const {
@@ -153,6 +154,7 @@ public:
 	//int InCurrentBrush(int i, int j, int rx, int ry);
 	//int get_brush_flags();
 	int create_part(int p, int x, int y, int t, int v = -1);
+	int create_part(int p, int x, int y, int z, int t, int v = -1);
 	void delete_part(int x, int y);
 	void get_sign_pos(int i, int *x0, int *y0, int *w, int *h);
 	int is_wire(int x, int y);
