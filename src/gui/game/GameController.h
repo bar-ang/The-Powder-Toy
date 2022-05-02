@@ -148,6 +148,9 @@ public:
 	void ReloadSim();
 	void Vote(int direction);
 	void ChangeBrush();
+	void ChangeBrushDepth(unsigned int depth);
+	void BrushDepthPushBack();
+	void BrushDepthPullFront();
 	void ShowConsole();
 	void HideConsole();
 	void FrameStep();

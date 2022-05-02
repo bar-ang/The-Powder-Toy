@@ -78,6 +78,7 @@ private:
 	std::unique_ptr<Snapshot> historyCurrent;
 	unsigned int historyPosition;
 	unsigned int undoHistoryLimit;
+	unsigned int brushDepth;
 	bool mouseClickRequired;
 	bool includePressure;
 	bool perfectCircle = true;
@@ -177,6 +178,8 @@ public:
 	std::vector<Brush*> GetBrushList();
 	int GetBrushID();
 	void SetBrushID(int i);
+	unsigned int GetBrushDepth();
+	void SetBrushDepth(unsigned int depth);
 
 	void SetVote(int direction);
 	SaveInfo * GetSave();

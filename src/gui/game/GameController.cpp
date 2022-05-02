@@ -1476,6 +1476,23 @@ void GameController::Vote(int direction)
 	}
 }
 
+void GameController::ChangeBrushDepth(unsigned int depth)
+{
+	gameModel->SetBrushDepth(depth);
+}
+
+void GameController::BrushDepthPushBack()
+{
+	auto depth = gameModel->GetBrushDepth();
+	gameModel->SetBrushDepth(depth + 1);
+}
+
+void GameController::BrushDepthPullFront()
+{
+	auto depth = gameModel->GetBrushDepth();
+	gameModel->SetBrushDepth(depth - 1);
+}
+
 void GameController::ChangeBrush()
 {
 	auto prev_size = gameModel->GetBrush()->GetRadius();

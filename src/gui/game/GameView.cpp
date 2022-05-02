@@ -1494,6 +1494,12 @@ void GameView::OnKeyPress(int key, int scan, bool repeat, bool shift, bool ctrl,
 	{
 		switch (key)
 		{
+		case SDLK_UP:
+			c->BrushDepthPushBack();
+			break;
+		case SDLK_DOWN:
+			c->BrushDepthPullFront();
+			break;
 		case SDLK_TAB: //Tab
 			c->ChangeBrush();
 			break;

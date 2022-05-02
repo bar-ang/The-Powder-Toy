@@ -818,6 +818,16 @@ std::vector<Brush*> GameModel::GetBrushList()
 	return brushList;
 }
 
+unsigned int GameModel::GetBrushDepth()
+{
+	return brushDepth;
+}
+
+void GameModel::SetBrushDepth(unsigned int depth)
+{
+	brushDepth = depth;
+}
+
 int GameModel::GetBrushID()
 {
 	return currentBrush;
