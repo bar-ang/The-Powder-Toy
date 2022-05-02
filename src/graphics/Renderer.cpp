@@ -1269,8 +1269,16 @@ void Renderer::render_parts()
 		if (sim->parts[i].type && sim->parts[i].type >= 0 && sim->parts[i].type < PT_NUM) {
 			t = sim->parts[i].type;
 
-			nx = (int)(sim->parts[i].x+0.5f);
-			ny = (int)(sim->parts[i].y+0.5f);
+			float scale = 0.02f;
+			auto rx = sim->parts[i].x;
+			auto ry = sim->parts[i].y;
+			auto rz = sim->parts[i].z;
+
+			float fx = (NUM_Z_LAYERS - scale * rz - 1)*rx/(NUM_Z_LAYERS - 1);
+			float fy = (NUM_Z_LAYERS - scale * rz - 1)*ry/(NUM_Z_LAYERS - 1);
+
+			nx = (int)(fx+0.5f);
+			ny = (int)(fy+0.5f);
 #ifdef OGLR
 			fnx = sim->parts[i].x;
 			fny = sim->parts[i].y;
