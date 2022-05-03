@@ -1,6 +1,7 @@
 #ifndef SIMTOOL_H
 #define SIMTOOL_H
 
+#include "simulation/ToolCommon.h"
 #include "common/String.h"
 #include "graphics/Pixel.h"
 
@@ -14,7 +15,7 @@ public:
 	pixel Colour;
 	String Description;
 
-	int (*Perform)(Simulation * sim, Particle * cpart, int x, int y, int brushX, int brushY, float strength);
+	int (*Perform)(PERFORM_FUNC_ARGS);
 
 	SimTool();
 

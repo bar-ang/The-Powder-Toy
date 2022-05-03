@@ -1,6 +1,6 @@
 #include "simulation/ToolCommon.h"
 
-static int perform(Simulation * sim, Particle * cpart, int x, int y, int brushX, int brushYy, float strength);
+static int perform(PERFORM_FUNC_ARGS);
 
 void SimTool::Tool_NGRV()
 {
@@ -11,7 +11,7 @@ void SimTool::Tool_NGRV()
 	Perform = &perform;
 }
 
-static int perform(Simulation * sim, Particle * cpart, int x, int y, int brushX, int brushYy, float strength)
+static int perform(PERFORM_FUNC_ARGS)
 {
 	sim->gravmap[((y/CELL)*(XRES/CELL))+(x/CELL)] = strength*-5.0f;
 	return 1;

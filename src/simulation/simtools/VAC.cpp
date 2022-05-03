@@ -1,7 +1,7 @@
 #include "simulation/ToolCommon.h"
 #include "simulation/Air.h"
 
-static int perform(Simulation * sim, Particle * cpart, int x, int y, int brushX, int brushY, float strength);
+static int perform(PERFORM_FUNC_ARGS);
 
 void SimTool::Tool_VAC()
 {
@@ -12,7 +12,7 @@ void SimTool::Tool_VAC()
 	Perform = &perform;
 }
 
-static int perform(Simulation * sim, Particle * cpart, int x, int y, int brushX, int brushY, float strength)
+static int perform(PERFORM_FUNC_ARGS)
 {
 	sim->air->pv[y/CELL][x/CELL] -= strength*0.05f;
 

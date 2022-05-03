@@ -3,7 +3,7 @@
 #include "common/tpt-rand.h"
 #include <cmath>
 
-static int perform(Simulation * sim, Particle * cpart, int x, int y, int brushX, int brushY, float strength);
+static int perform(PERFORM_FUNC_ARGS);
 
 void SimTool::Tool_MIX()
 {
@@ -14,7 +14,7 @@ void SimTool::Tool_MIX()
 	Perform = &perform;
 }
 
-static int perform(Simulation * sim, Particle * cpart, int x, int y, int brushX, int brushY, float strength)
+static int perform(PERFORM_FUNC_ARGS)
 {
 	int thisPart = sim->pmap[y][x];
 	if(!thisPart)

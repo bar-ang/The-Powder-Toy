@@ -1,6 +1,6 @@
 #include "simulation/ToolCommon.h"
 
-static int perform(Simulation * sim, Particle * cpart, int x, int y, int brushX, int brushY, float strength);
+static int perform(PERFORM_FUNC_ARGS);
 
 void SimTool::Tool_HEAT()
 {
@@ -11,7 +11,7 @@ void SimTool::Tool_HEAT()
 	Perform = &perform;
 }
 
-static int perform(Simulation * sim, Particle * cpart, int x, int y, int brushX, int brushY, float strength)
+static int perform(PERFORM_FUNC_ARGS)
 {
 	if(!cpart)
 		return 0;

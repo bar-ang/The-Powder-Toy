@@ -3,7 +3,7 @@
 
 #include <cmath>
 
-static int perform(Simulation * sim, Particle * cpart, int x, int y, int brushX, int brushY, float strength);
+static int perform(PERFORM_FUNC_ARGS);
 
 void SimTool::Tool_CYCL()
 {
@@ -14,7 +14,7 @@ void SimTool::Tool_CYCL()
 	Perform = &perform;
 }
 
-static int perform(Simulation * sim, Particle * cpart, int x, int y, int brushX, int brushY, float strength)
+static int perform(PERFORM_FUNC_ARGS)
 {
 	/*
 		Air velocity calculation.

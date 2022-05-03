@@ -54,6 +54,8 @@
 #define CTYPEDRAW_FUNC_ARGS Simulation *sim, int i, int t, int v
 #define CTYPEDRAW_FUNC_SUBCALL_ARGS sim, i, t, v
 
+#define PERFORM_FUNC_ARGS Simulation * sim, Particle * cpart, int x, int y, int brushX, int brushY, float strength
+
 #define BOUNDS_CHECK true
 
 #define OLD_PT_WIND 147
