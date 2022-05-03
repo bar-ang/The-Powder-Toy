@@ -1,3 +1,4 @@
+#include "simulation/ToolCommon.h"
 #include "ToolClasses.h"
 
 std::vector<SimTool> const &GetTools()

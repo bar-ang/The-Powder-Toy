@@ -1386,7 +1386,7 @@ int Simulation::Tool(int x, int y, int z, int tool, int brushX, int brushY, floa
 		cpart = &(parts[ID(r)]);
 	else if ((r = photons[y][x]))
 		cpart = &(parts[ID(r)]);
-	return tools[tool].Perform(this, cpart, x, y, brushX, brushY, strength);
+	return tools[tool].Perform(this, cpart, x, y, z, brushX, brushY, strength);
 }
 
 #ifndef RENDERER

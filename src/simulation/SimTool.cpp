@@ -7,6 +7,7 @@
 #include "simulation/Simulation.h"
 
 #include "Misc.h"
+#include "simulation/ToolCommon.h"
 #include "ToolClasses.h"
 
 SimTool::SimTool():
