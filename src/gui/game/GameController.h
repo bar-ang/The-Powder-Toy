@@ -151,6 +151,7 @@ public:
 	void ChangeBrushDepth(unsigned int depth);
 	void BrushDepthPushBack();
 	void BrushDepthPullFront();
+	unsigned int GetBrushDepth();
 	void ShowConsole();
 	void HideConsole();
 	void FrameStep();

@@ -1476,6 +1476,12 @@ void GameController::Vote(int direction)
 	}
 }
 
+unsigned int GameController::GetBrushDepth()
+{
+	return gameModel->GetBrushDepth();
+}
+
+
 void GameController::ChangeBrushDepth(unsigned int depth)
 {
 	gameModel->SetBrushDepth(depth);
