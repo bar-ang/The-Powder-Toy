@@ -975,6 +975,7 @@ void GameView::OnMouseMove(int x, int y, int dx, int dy)
 	bool newMouseInZoom = c->MouseInZoom(ui::Point(x, y));
 	mousePosition = c->PointTranslate(ui::Point(x, y));
 	currentMouse = ui::Point(x, y);
+	auto depth = c->GetBrushDepth();
 	if (selectMode != SelectNone)
 	{
 		if (selectMode == PlaceSave)
@@ -988,7 +989,7 @@ void GameView::OnMouseMove(int x, int y, int dx, int dy)
 		{
 			if (drawMode == DrawPoints)
 			{
-				currentPoint = mousePosition;
+				currentPoint = mousePosition + ui::Point(0, 0, depth);
 				c->DrawPoints(toolIndex, lastPoint, currentPoint, true);
 				lastPoint = currentPoint;
 				skipDraw = true;
