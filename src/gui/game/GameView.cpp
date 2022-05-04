@@ -989,7 +989,7 @@ void GameView::OnMouseMove(int x, int y, int dx, int dy)
 		{
 			if (drawMode == DrawPoints)
 			{
-				currentPoint = mousePosition + ui::Point(0, 0, depth);
+				currentPoint = mousePosition + DEPTH_POINT(depth);
 				c->DrawPoints(toolIndex, lastPoint, currentPoint, true);
 				lastPoint = currentPoint;
 				skipDraw = true;
@@ -1021,6 +1021,7 @@ void GameView::OnMouseMove(int x, int y, int dx, int dy)
 
 void GameView::OnMouseDown(int x, int y, unsigned button)
 {
+	auto depth = c->GetBrushDepth();
 	currentMouse = ui::Point(x, y);
 	if (altBehaviour && !shiftBehaviour && !ctrlBehaviour)
 		button = SDL_BUTTON_MIDDLE;
@@ -1062,12 +1063,12 @@ void GameView::OnMouseDown(int x, int y, unsigned button)
 			}
 			else if (drawMode == DrawPoints)
 			{
-				lastPoint = currentPoint = c->PointTranslate(currentMouse);
+				lastPoint = currentPoint = c->PointTranslate(currentMouse) + DEPTH_POINT(depth);
 				c->DrawPoints(toolIndex, lastPoint, currentPoint, false);
 			}
 			else if (drawMode == DrawFill)
 			{
-				c->DrawFill(toolIndex, c->PointTranslate(currentMouse));
+				c->DrawFill(toolIndex, c->PointTranslate(currentMouse) + DEPTH_POINT(depth));
 			}
 		}
 	}

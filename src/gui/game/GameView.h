@@ -7,6 +7,8 @@
 #include "gui/interface/Window.h"
 #include "simulation/Sample.h"
 
+#define DEPTH_POINT(z) ui::Point(0, 0, (z))
+
 enum DrawMode
 {
 	DrawPoints, DrawLine, DrawRect, DrawFill
