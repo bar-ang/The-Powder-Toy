@@ -179,7 +179,7 @@ public:
 	int GetBrushID();
 	void SetBrushID(int i);
 	unsigned int GetBrushDepth();
-	void SetBrushDepth(unsigned int depth);
+	bool SetBrushDepth(unsigned int depth);
 
 	void SetVote(int direction);
 	SaveInfo * GetSave();

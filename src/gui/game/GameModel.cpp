@@ -823,9 +823,13 @@ unsigned int GameModel::GetBrushDepth()
 	return brushDepth;
 }
 
-void GameModel::SetBrushDepth(unsigned int depth)
+bool GameModel::SetBrushDepth(unsigned int depth)
 {
+	if (depth >= NUM_Z_LAYERS)
+		return false;
+
 	brushDepth = depth;
+	return true;
 }
 
 int GameModel::GetBrushID()

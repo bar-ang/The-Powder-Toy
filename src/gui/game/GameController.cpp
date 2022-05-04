@@ -1482,21 +1482,21 @@ unsigned int GameController::GetBrushDepth()
 }
 
 
-void GameController::ChangeBrushDepth(unsigned int depth)
+bool GameController::ChangeBrushDepth(unsigned int depth)
 {
-	gameModel->SetBrushDepth(depth);
+	return gameModel->SetBrushDepth(depth);
 }
 
-void GameController::BrushDepthPushBack()
+bool GameController::BrushDepthPushBack()
 {
 	auto depth = gameModel->GetBrushDepth();
-	gameModel->SetBrushDepth(depth + 1);
+	return gameModel->SetBrushDepth(depth + 1);
 }
 
-void GameController::BrushDepthPullFront()
+bool GameController::BrushDepthPullFront()
 {
 	auto depth = gameModel->GetBrushDepth();
-	gameModel->SetBrushDepth(depth - 1);
+	return gameModel->SetBrushDepth(depth - 1);
 }
 
 void GameController::ChangeBrush()
