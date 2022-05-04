@@ -829,6 +829,7 @@ bool GameModel::SetBrushDepth(unsigned int depth)
 		return false;
 
 	brushDepth = depth;
+	std::cout << "brush depth is now " << depth << std::endl;
 	return true;
 }
 

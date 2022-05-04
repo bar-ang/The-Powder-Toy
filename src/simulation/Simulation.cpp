@@ -3294,7 +3294,15 @@ int Simulation::create_part_3d(int p, int x, int y, int z, int t, int v)
 	parts[i].x = (float)x;
 	parts[i].y = (float)y;
 	parts[i].z = (float)z;
-	parts[i].dcolour = (int)((0.5 + parts[i].z / 2) * 256 / NUM_Z_LAYERS) << 24;
+	//parts[i].dcolour = (int)((0.5 + parts[i].z / 2) * 256 / NUM_Z_LAYERS) << 24;
+	unsigned int g, r;
+
+	r = parts[i].z * 255 / (NUM_Z_LAYERS-1);
+	g = 255 - r;
+
+	std::cout << parts[i].z << " to " << r << std::endl;
+
+	parts[i].dcolour = (255 << 24) + (g << 8) + (r << 16);
 
 	//and finally set the pmap/photon maps to the newly created particle
 	if (elements[t].Properties & TYPE_ENERGY)

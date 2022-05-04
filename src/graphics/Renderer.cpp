@@ -1269,7 +1269,7 @@ void Renderer::render_parts()
 		if (sim->parts[i].type && sim->parts[i].type >= 0 && sim->parts[i].type < PT_NUM) {
 			t = sim->parts[i].type;
 
-			float scale = 0.02f;
+			float scale = 0.00f;
 			auto rx = sim->parts[i].x;
 			auto ry = sim->parts[i].y;
 			auto rz = sim->parts[i].z;
