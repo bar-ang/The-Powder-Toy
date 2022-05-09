@@ -3300,7 +3300,7 @@ int Simulation::create_part_3d(int p, int x, int y, int z, int t, int v)
 	r = parts[i].z * 255 / (NUM_Z_LAYERS-1);
 	g = 255 - r;
 
-	std::cout << parts[i].z << " to " << r << std::endl;
+	//std::cout << parts[i].z << " to " << r << std::endl;
 
 	parts[i].dcolour = (255 << 24) + (g << 8) + (r << 16);
 
