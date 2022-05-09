@@ -2501,7 +2501,7 @@ int Simulation::eval_move(int pt, int nx, int ny, int nz, unsigned *rr)
 	unsigned r;
 	int result;
 
-	if (nx<0 || ny<0 || nx>=XRES || ny>=YRES)
+	if (nx<0 || ny<0 || nx>=XRES || ny>=YRES || nz<0 || nz >= NUM_Z_LAYERS)
 		return 0;
 
 	r = pmap[ny][nx];
@@ -2511,6 +2511,10 @@ int Simulation::eval_move(int pt, int nx, int ny, int nz, unsigned *rr)
 		*rr = r;
 	if (pt>=PT_NUM || TYP(r)>=PT_NUM)
 		return 0;
+
+	if (parts[ID(r)].z != nz)
+		return 2;
+
 	result = can_move[pt][TYP(r)];
 	if (result == 3)
 	{
